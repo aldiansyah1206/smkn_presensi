@@ -45,7 +45,7 @@ class KegiatanController extends Controller
         $kegiatan->name = $request->name;
         $kegiatan->save();
     
-        return redirect()->route("apps.kegiatan.index")->with(['success' => 'Data Berhasil Ditambahkan']);
+        return redirect()->route("apps.kegiatan.index")->with(['success' => 'Data berhasil ditambahkan']);
     }
 
     /**
@@ -53,7 +53,10 @@ class KegiatanController extends Controller
      */
     public function show(Kegiatan $kegiatan)
     {
-        //
+        return view("apps.kegiatan.edit", [
+            "title" => "Edit kegiatan ",
+            "kegiatan" => $kegiatan,
+        ]);
     }
 
     /**
@@ -61,7 +64,10 @@ class KegiatanController extends Controller
      */
     public function edit(Kegiatan $kegiatan)
     {
-        //
+        return view("apps.kegiatan.edit", [
+            "title" => "Edit Kegiatan ",
+            "kegiatan" => $kegiatan,
+        ]);
     }
 
     /**
@@ -69,14 +75,21 @@ class KegiatanController extends Controller
      */
     public function update(Request $request, Kegiatan $kegiatan)
     {
-    
+        $request->validate([
+            'name' => 'required|string|max:255|unique:kegiatan,name,' . $kegiatan->id,
+        ]);
+        $kegiatan->name = $request->name;
+        $kegiatan->save();
+        return redirect()->route('apps.kegiatan.index')->with(['success' => 'Data berhasil diupdate']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Kegiatan $kegiatan)
+    public function destroy($id)
     {
-        //
+        $kegiatan= Kegiatan::findOrFail($id); 
+        $kegiatan->delete();
+        return redirect()->route('apps.kegiatan.index')->with('success', 'Kegiatan berhasil dihapus.');
     }
 }

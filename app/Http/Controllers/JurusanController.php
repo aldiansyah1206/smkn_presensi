@@ -48,7 +48,7 @@ class JurusanController extends Controller
         $jurusan->name = $request->name;
         $jurusan->save();
     
-        return redirect()->route("apps.jurusan.index")->with(['success' => 'Data Berhasil Ditambah']);
+        return redirect()->route("apps.jurusan.index")->with(['success' => 'Data berhasil ditambah']);
     }
 
     /**
@@ -80,7 +80,7 @@ class JurusanController extends Controller
         ]);
         $jurusan->name = $request->name;
         $jurusan->save();
-        return redirect()->route('apps.jurusan.index')->with(['success' => 'Data Berhasil Diupdate']);
+        return redirect()->route('apps.jurusan.index')->with(['success' => 'Data berhasil diupdate']);
     }
 
     /**
@@ -90,6 +90,6 @@ class JurusanController extends Controller
     {
         $jurusan= Jurusan::findOrFail($id); 
         $jurusan->delete();
-        return redirect()->route('apps.jurusan.index')->with('success', 'Jurusan Berhasil Dihapus.');
+        return redirect()->route('apps.jurusan.index')->with('success', 'Jurusan berhasil dihapus.');
     }
 }

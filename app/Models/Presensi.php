@@ -5,11 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pembina extends Model
+class Presensi extends Model
 {
     use HasFactory;
-    
-    protected $table = 'jurusan';
-    protected $guarded = ['id'];
-    protected $fillable = ["name"];
 }

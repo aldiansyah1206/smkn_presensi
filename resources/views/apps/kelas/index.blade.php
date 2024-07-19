@@ -49,7 +49,7 @@
                     </table>
                 </div>
             </div>
-            {{ $kelas->links('pagination::simple-bootstrap-4') }}
+            {{ $kelas->links('pagination::simple-bootstrap-5') }}
         </div>
     </div>
 </div>
@@ -58,7 +58,7 @@
 <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="tambahModalLabel">Tambah Kelas</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -84,7 +84,7 @@
 <!-- Modal Edit dan Hapus -->
 @foreach ($kelas as $k)
 <div class="modal fade" id="editKelasModal{{ $k->id }}" tabindex="-1" aria-labelledby="editKelasModalLabel{{ $k->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="editKelasModalLabel{{ $k->id }}">Edit Nama Kelas</h5>

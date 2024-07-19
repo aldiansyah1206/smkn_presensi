@@ -1,10 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@if (session()->has('success'))
-<div class="alert alert-success" role="alert">
-    {{ session('success') }}
-</div>
-@endif
   {{-- Admin Dashboard  --}}
   @if (Auth::user()->hasRole('admin'))
   <div class="row">

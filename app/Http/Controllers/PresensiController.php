@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Siswa;
-use Illuminate\Http\Request;
+use App\Models\Presensi;
+use App\Http\Requests\StorePresensiRequest;
+use App\Http\Requests\UpdatePresensiRequest;
 
-class SiswaController extends Controller
+class PresensiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        
+        //
     }
 
     /**
@@ -26,7 +27,7 @@ class SiswaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePresensiRequest $request)
     {
         //
     }
@@ -34,7 +35,7 @@ class SiswaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Siswa $siswa)
+    public function show(Presensi $presensi)
     {
         //
     }
@@ -42,7 +43,7 @@ class SiswaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Siswa $siswa)
+    public function edit(Presensi $presensi)
     {
         //
     }
@@ -50,7 +51,7 @@ class SiswaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Siswa $siswa)
+    public function update(UpdatePresensiRequest $request, Presensi $presensi)
     {
         //
     }
@@ -58,7 +59,7 @@ class SiswaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Siswa $siswa)
+    public function destroy(Presensi $presensi)
     {
         //
     }

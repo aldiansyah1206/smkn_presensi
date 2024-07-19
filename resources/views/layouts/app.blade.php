@@ -18,7 +18,11 @@
 
         <!-- Custom styles for this template-->
         <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-  
+         <!--calendar-->
+        <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.css' rel='stylesheet' />
+        <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js"></script>
+        
     </head>
     <body id="page-top">
 
@@ -57,31 +61,37 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/pembina'}}">
                         <i class="fas fa-fw fa-user"></i>
-                        <span>Data Pembina </span></span></a>
+                        <span>Data Pembina </span></a>
                 </li>
                 <!-- Nav Item - datasiswa -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/siswa'}}">
                         <i class="fas fa-user-friends"></i>
-                        <span>Data Siswa </span></span></a>
+                        <span>Data Siswa </span></a>
                 </li>
                 <!-- Nav Item - kelas -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/kelas'}}">
                         <i class="fas fa-users"></i>
-                        <span>Kelas</span></span></a>
+                        <span>Kelas</span></a>
                 </li>
                 <!-- Nav Item -jurusan  -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'jurusan'}}">
+                    <a class="nav-link" href="{{'/jurusan'}}">
                         <i class="fas fa-school"></i>
-                        <span>Jurusan</span></span></a>
+                        <span>Jurusan</span></a>
                 </li>
-                <!-- Nav Item -kegitan  -->
+                <!-- Nav Item kegitan  -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'kegiatan'}}">
-                        <i class="fas fa-school"></i>
-                        <span>Kegiatan</span></span></a>
+                    <a class="nav-link" href="{{'/kegiatan'}}">
+                        <i class="fas fa-clipboard"></i>
+                        <span>Kegiatan</span></a>
+                </li>
+                <!-- Nav Item penjadwalan  -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{'/penjadwalan'}}">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Jadwal</span></a>
                 </li>
                 @endif
 
@@ -105,13 +115,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/presensi'}}">
                         <i class="fas fa-clipboard-list"></i>
-                        <span>Presensi</span></span></a>
+                        <span>Presensi</span></a>
                 </li>
                 <!-- Nav Item - datapresensi  -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/riwayatpresensi'}}">
                         <i class="fas fa-clipboard-list"></i>
-                        <span>Riwayat Presensi</span></span></a>
+                        <span>Riwayat Presensi</span></a>
                 </li>
                 @endif
 
@@ -231,6 +241,9 @@
                             </div>
                         </div>
                         @endif
+                        @error('name')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
                         <!-- Page Heading -->
                         @yield('content')
                     </div>
@@ -269,7 +282,7 @@
     
         <!-- Custom scripts for all pages-->
         <script src="/js/sb-admin-2.min.js"></script>
-    
+        @yield('script')
         <script>
             window.setTimeout(function() {
                 document.querySelectorAll('.alert').forEach(function(alert) {
