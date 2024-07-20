@@ -6,6 +6,7 @@ use App\Models\Kegiatan;
 use App\Models\Penjadwalan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PenjadwalanController extends Controller
 {
@@ -22,15 +23,20 @@ class PenjadwalanController extends Controller
         }
     
         $penjadwalan = Penjadwalan::with('kegiatan')->get()->map(function ($event) {
+            // Konversi string ke objek Carbon jika diperlukan
+            $tanggalMulai = Carbon::parse($event->tanggal_mulai);
+            $tanggalSelesai = Carbon::parse($event->tanggal_selesai);
+        
             return [
                 'id' => $event->id,
                 'title' => $event->kegiatan->name,
-                'start' => $event->tanggal_mulai,
-                'end' => $event->tanggal_selesai,
+                'start' => $tanggalMulai->format('Y-m-d'), // Format hanya tanggal
+                'end' => $tanggalSelesai->format('Y-m-d'), // Format hanya tanggal
                 'kegiatan' => $event->kegiatan
             ];
         });
-    
+        
+         
         return view('apps.penjadwalan.index', [
             "penjadwalan" => $penjadwalan->toJson(),
             "kegiatan" => Kegiatan::all()
@@ -52,7 +58,7 @@ class PenjadwalanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $request->validate([
             'kegiatan_id' => 'required|exists:kegiatan,id',
@@ -60,26 +66,26 @@ class PenjadwalanController extends Controller
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
         ]);
 
-        $tanggalMulai = Carbon::parse($request->tanggal_mulai);
-        $tanggalSelesai = Carbon::parse($request->tanggal_selesai);
-        // Create the initial event
-        Penjadwalan::create($request->all());
+        // Parse tanggal untuk perbandingan
+        $tanggalMulai = Carbon::parse($request->tanggal_mulai)->format('Y-m-d');
+        $tanggalSelesai = Carbon::parse($request->tanggal_selesai)->format('Y-m-d');
 
-        // Create recurring events for the next 3 weeks
-        for ($i = 1; $i <= 3; $i++) {
-            $newStartDate = $tanggalMulai->copy()->addWeeks($i);
-            $newEndDate = $tanggalSelesai->copy()->addWeeks($i);
+        // Cek apakah ada kegiatan dengan ID yang sama pada tanggal yang sama
+        $existingEvent = Penjadwalan::where('kegiatan_id', $request->kegiatan_id)
+                                    ->whereDate('tanggal_mulai', $tanggalMulai)
+                                    ->whereDate('tanggal_selesai', $tanggalSelesai)
+                                    ->first();
 
-            Penjadwalan::create([
-                'kegiatan_id' => $request->kegiatan_id,
-                'tanggal_mulai' => $newStartDate,
-                'tanggal_selesai' => $newEndDate,
-            ]);
+        if ($existingEvent) {
+            return redirect()->back()->with('error', 'Kegiatan dengan ID ini sudah ada pada tanggal tersebut.');
         }
 
-        return redirect()->route('apps.penjadwalan.index')->with('success', 'Jadwal berhasil ditambahkan dan akan berulang setiap minggu.');
-    }
+        // Simpan kegiatan baru
+        Penjadwalan::create($request->all());
 
+        return redirect()->route('apps.penjadwalan.index')->with('success', 'Jadwal berhasil ditambahkan.');
+    }
+    
 
     /**
      * Display the specified resource.
@@ -127,15 +133,25 @@ class PenjadwalanController extends Controller
     
         $penjadwalan->update($request->all());
         return redirect()->route('apps.penjadwalan.index')->with('success', 'Jadwal berhasil diupdate');
-    }    
+    }
+        
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Penjadwalan $penjadwalan)
+    public function destroy($id)
     {
-        $penjadwalan->delete();
-    
-        return redirect()->route('apps.penjadwalan.index')->with('success', 'Jadwal berhasil dihapus.');
+        try {
+            // Cari kegiatan berdasarkan ID
+            $penjadwalan = Penjadwalan::findOrFail($id);
+            // Hapus kegiatan
+            $penjadwalan->delete();
+            return response()->json(['success' => 'Kegiatan berhasil dihapus.'], 200);
+        } catch (\Exception $e) {
+            // Log kesalahan
+            Log::error('Gagal menghapus kegiatan: ' . $e->getMessage());
+
+            return response()->json(['message' => 'Gagal menghapus kegiatan.'], 500);
+        }
     }
 }  

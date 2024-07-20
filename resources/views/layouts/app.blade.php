@@ -19,9 +19,9 @@
         <!-- Custom styles for this template-->
         <link href="/css/sb-admin-2.min.css" rel="stylesheet">
          <!--calendar-->
-        <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.css' rel='stylesheet' />
-        <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js"></script>
+         <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
+         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
+         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         
     </head>
     <body id="page-top">
@@ -240,13 +240,34 @@
                                 </div>
                             </div>
                         </div>
+                        @elseif(session()->has('error'))
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ session('error') }}
+                                </div>
+                            </div>
+                        </div>
                         @endif
-                        @error('name')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
+                    
+                        @if ($errors->any())
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                    
                         <!-- Page Heading -->
                         @yield('content')
                     </div>
+                    
                     <!-- /.container-fluid -->
     
                 </div>

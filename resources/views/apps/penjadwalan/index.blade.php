@@ -44,47 +44,130 @@
         </div>
     </div>
 
-<!-- Script untuk FullCalendar dan Ajax -->
-<script>
+    <!-- Script untuk FullCalendar dan Ajax -->
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: {!! $penjadwalan !!}
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: {!! $penjadwalan !!},
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            meridiem: false
+        },
+        views: {
+            dayGridMonth: {
+                titleFormat: {
+                    month: 'long',
+                    year: 'numeric'
+                }
+            },
+            timeGridWeek: {
+                titleFormat: {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                }
+            },
+            timeGridDay: {
+                titleFormat: {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }
+            }
+        },
+        eventClick: function(info) {
+            if (confirm('Apakah Anda yakin ingin menghapus kegiatan ini?')) {
+                var eventId = info.event.id;
+                
+               // Log the AJAX URL to console
+                console.log('AJAX URL:', "{{ url('penjadwalan') }}/" + eventId);
+ 
+                $.ajax({
+                    url: "{{ url('penjadwalan') }}/" + eventId,
+                    type: 'DELETE',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        console.log('Delete Success Response:', response);
+                        alert('Kegiatan berhasil dihapus.');
+                        calendar.refetchEvents();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Delete Error Status:', status);
+                        console.log('Delete Error:', error);
+                        console.log('Response:', xhr.responseText);
+                        alert('Gagal menghapus kegiatan.');
+                    }
+                });
+            }
+        },
+        eventOverlap: true,
+    });
+
+    calendar.render();
+
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+        var kegiatanId = formData.get('kegiatan_id');
+        var tanggalMulai = formData.get('tanggal_mulai');
+        var tanggalSelesai = formData.get('tanggal_selesai');
+
+        // Cek duplikasi sebelum mengirimkan formulir
+        var isDuplicate = false;
+        calendar.getEvents().forEach(function(event) {
+            if (event.extendedProps.kegiatan_id == kegiatanId &&
+                event.start.toISOString().split('T')[0] == tanggalMulai &&
+                event.end.toISOString().split('T')[0] == tanggalSelesai) {
+                isDuplicate = true;
+            }
         });
 
-        calendar.render();
+        if (isDuplicate) {
+            alert('Kegiatan dengan ID ini sudah ada pada tanggal tersebut.');
+            return;
+        }
 
-        // Permintaan Ajax untuk menyimpan kegiatan
-        document.getElementById('btn-simpan').addEventListener('click', function() {
-            var kegiatanId = document.getElementById('kegiatan_id').value;
-            var tanggalMulai = document.getElementById('tanggal_mulai').value;
-            var tanggalSelesai = document.getElementById('tanggal_selesai').value;
-
-            // Mengirim permintaan Ajax untuk menyimpan kegiatan
-            $.ajax({
-                url: "{{ route('apps.penjadwalan.store') }}",
-                type: 'POST',
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    kegiatan_id: kegiatanId,
-                    tanggal_mulai: tanggalMulai,
-                    tanggal_selesai: tanggalSelesai
-                },
-                success: function(response) {
-                    // Memuat ulang jadwal pada kalender setelah berhasil menyimpan
-                    calendar.refetchEvents();
-                    // Membersihkan input form
-                    document.getElementById('kegiatan_id').value = '';
-                    document.getElementById('tanggal_mulai').value = '';
-                    document.getElementById('tanggal_selesai').value = '';
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                    alert('Gagal menyimpan kegiatan.');
-                }
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        calendar.refetchEvents();
+                        document.querySelector('form').reset();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Save Error Status:', status);
+                        console.log('Save Error:', error);
+                        console.log('Response:', xhr.responseText);
+                        alert('Gagal menyimpan kegiatan.');
+                    }
+                });
             });
         });
-    });
-</script>
+
+    </script>
+    <style>
+        /* Sembunyikan kolom waktu di tampilan mingguan dan harian */
+        .fc-timegrid-slot-label, .fc-timegrid-slot {
+            display: none;
+        }
+        .fc-timegrid-allday, .fc-timegrid-axis-cushion, .fc-timegrid-axis-frame {
+        display: none;
+        }
+    </style>
+
 @endsection
