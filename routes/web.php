@@ -8,6 +8,7 @@ use App\Http\Controllers\PembinaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,16 +21,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-Route::get('/logout', function () {
-    return view('auth.login');
-});
+// login
+Route::get('admin/login', [AuthenticatedSessionController::class, 'createAdminLogin'])->name('auth.loginadmin');
+Route::post('admin/login', [AuthenticatedSessionController::class, 'storeAdminLogin']);
+Route::post('admin/logout', [AuthenticatedSessionController::class, 'destroy'])->name('admin.logout');
+Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::post('login', [AuthenticatedSessionController::class, 'store']);
+Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -38,6 +38,10 @@ Route::middleware('auth')->group(function () {
 });
 // Rote role admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
+    // Dashboard Admin
+    Route::get('dashboard/admin', function () {
+        return view('dashboard.admin');
+    })->name('dashboard.admin.index');
     // kelas
     Route::get('/kelas', [KelasController::class, 'index'])->name('apps.kelas.index');
     Route::get('/kelas/create', [KelasController::class, 'create'])->name('apps.kelas.create');

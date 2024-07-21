@@ -12,37 +12,78 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
-    public function create(): View
+    public function create()
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
+    public function createAdminLogin()
     {
-        $request->authenticate();
-
-        $request->session()->regenerate();
-
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return view('auth.loginadmin');
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        Auth::guard('web')->logout();
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'user_type' => 'required|string'
+        ]);
 
+        $guard = $request->user_type;
+
+        if (in_array($guard, ['pembina', 'siswa']) && Auth::guard($guard)->attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
+
+            switch ($guard) {
+                case 'pembina':
+                    return redirect()->intended(RouteServiceProvider::PEMBINA_HOME);
+                case 'siswa':
+                    return redirect()->intended(RouteServiceProvider::SISWA_HOME);
+            }
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }
+
+    public function storeAdminLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::guard('web')->attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }
+    public function destroy(Request $request)
+    {
+        $guard = $request->user_type ?? 'web'; // Default ke 'web' jika user_type tidak ada
+    
+        // Log out dari guard yang sesuai
+        Auth::guard($guard)->logout();
+    
+        // Hapus sesi dan regenerasi token
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
-        return redirect('/');
+    
+        // Redirect ke halaman login yang sesuai
+        if ($guard === 'web') {
+            // Jika guard adalah 'web', kita anggap ini admin
+            return redirect()->route('auth.loginadmin');
+        } else {
+            // Jika guard adalah selain 'web', anggap ini pembina atau siswa
+            return redirect()->route('login');
+        }
     }
+    
+    
 }

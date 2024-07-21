@@ -106,7 +106,7 @@
                         console.log('Delete Error Status:', status);
                         console.log('Delete Error:', error);
                         console.log('Response:', xhr.responseText);
-                        alert('Gagal menghapus kegiatan.');
+                        alert('Gagal menghapus jadwal.');
                     }
                 });
             }

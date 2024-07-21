@@ -155,15 +155,32 @@
                     </li>
                 @endif
                 <!-- Divider -->
-                <hr class="sidebar-divider my-0">
-                @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('pembina') || Auth::user()->hasRole('siswa'))   
-                <!-- Nav Item - logout -->
+                <!-- Untuk admin -->
+                @if (Auth::user()->hasRole('admin'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('logout') }}">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span></a>
+                    <form method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="nav-link btn btn-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
                 </li>
                 @endif
+
+                <!-- Untuk pengguna umum (pembina dan siswa) -->
+                @if (Auth::user()->hasRole('pembina') || Auth::user()->hasRole('siswa'))
+                <li class="nav-item">
+                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="nav-link btn btn-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </li>
+                @endif
+
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 

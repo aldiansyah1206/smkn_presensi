@@ -40,6 +40,13 @@
 
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
+                <div class="form-group mb-3">
+                    <select name="user_type" id="user_type" class="form-control" required>
+                        <option value="" disabled selected>Pilih Pengguna....</option>
+                        <option value="pembina">Pembina</option>
+                        <option value="siswa">Siswa</option>
+                    </select>
+                </div>
                 <!-- Remember Me -->
                 <div class="block mt-3">
                     <label for="remember_me" class="inline-flex items-center">
