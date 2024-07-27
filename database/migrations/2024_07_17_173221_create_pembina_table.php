@@ -11,22 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('siswa', function (Blueprint $table) {
+        Schema::create('pembina', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('kelas_id');
-            $table->unsignedBigInteger('jurusan_id');
             $table->unsignedBigInteger('kegiatan_id');
             $table->enum('jenis_kelamin', ["p", "l"]);
-            $table->string('no_hp');
-            $table->text('alamat');
+            $table->string('no_hp')->nullable();
+            $table->string('alamat');
             $table->rememberToken();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('jurusan_id')->references('id')->on('jurusan')->onDelete('cascade');
-            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Ensure the correct table name
             $table->foreign('kegiatan_id')->references('id')->on('kegiatan')->onDelete('cascade');
-            
         });
     }
 
@@ -35,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('siswa');
+        Schema::dropIfExists('pembina');
     }
 };

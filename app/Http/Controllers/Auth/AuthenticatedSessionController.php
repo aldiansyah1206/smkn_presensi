@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -17,38 +15,7 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    public function createAdminLogin()
-    {
-        return view('auth.loginadmin');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-            'user_type' => 'required|string'
-        ]);
-
-        $guard = $request->user_type;
-
-        if (in_array($guard, ['pembina', 'siswa']) && Auth::guard($guard)->attempt($request->only('email', 'password'))) {
-            $request->session()->regenerate();
-
-            switch ($guard) {
-                case 'pembina':
-                    return redirect()->intended(RouteServiceProvider::PEMBINA_HOME);
-                case 'siswa':
-                    return redirect()->intended(RouteServiceProvider::SISWA_HOME);
-            }
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
-    }
-
-    public function storeAdminLogin(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'email' => 'required|email',
@@ -57,33 +24,35 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::guard('web')->attempt($request->only('email', 'password'))) {
             $request->session()->regenerate();
-            return redirect()->intended(RouteServiceProvider::HOME);
+
+            $user = Auth::user();
+
+            if ($user->hasRole('admin')) {
+                return redirect()->intended(RouteServiceProvider::HOME);
+            } elseif ($user->hasRole('pembina')) {
+                return redirect()->intended(RouteServiceProvider::PEMBINA_HOME);
+            } elseif ($user->hasRole('siswa')) {
+                return redirect()->intended(RouteServiceProvider::SISWA_HOME);
+            } else {
+                Auth::logout();
+                return redirect()->route('/login')->withErrors([
+                    'email' => 'Role not found. Please contact administrator.',
+                ]);
+            }
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
-    public function destroy(Request $request)
+
+    public function destroy(Request $request): RedirectResponse
     {
-        $guard = $request->user_type ?? 'web'; // Default ke 'web' jika user_type tidak ada
-    
-        // Log out dari guard yang sesuai
-        Auth::guard($guard)->logout();
-    
-        // Hapus sesi dan regenerasi token
+        Auth::guard('web')->logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-    
-        // Redirect ke halaman login yang sesuai
-        if ($guard === 'web') {
-            // Jika guard adalah 'web', kita anggap ini admin
-            return redirect()->route('auth.loginadmin');
-        } else {
-            // Jika guard adalah selain 'web', anggap ini pembina atau siswa
-            return redirect()->route('login');
-        }
+
+        return redirect('/');
     }
-    
-    
 }

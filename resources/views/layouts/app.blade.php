@@ -59,13 +59,13 @@
                 </div>
                 <!-- Nav Item - datapembina -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'/pembina'}}">
+                    <a class="nav-link" href="{{'/userspembina'}}">
                         <i class="fas fa-fw fa-user"></i>
                         <span>Data Pembina </span></a>
                 </li>
                 <!-- Nav Item - datasiswa -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'/siswa'}}">
+                    <a class="nav-link" href="{{'/userssiswa'}}">
                         <i class="fas fa-user-friends"></i>
                         <span>Data Siswa </span></a>
                 </li>
@@ -143,7 +143,7 @@
                  </div>
                 <!-- Nav Item - penjadwalan -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'jadwal'}}">
+                    <a class="nav-link" href="{{'penjadwalan'}}">
                         <i class="far fa-calendar-alt"></i>
                         <span>Jadwal</span></a>
                 </li>
@@ -155,21 +155,8 @@
                     </li>
                 @endif
                 <!-- Divider -->
-                <!-- Untuk admin -->
-                @if (Auth::user()->hasRole('admin'))
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="nav-link btn btn-link">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
-                        </button>
-                    </form>
-                </li>
-                @endif
-
                 <!-- Untuk pengguna umum (pembina dan siswa) -->
-                @if (Auth::user()->hasRole('pembina') || Auth::user()->hasRole('siswa'))
+                @if (Auth::user()->hasRole('admin')||Auth::user()->hasRole('pembina') || Auth::user()->hasRole('siswa'))
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                         @csrf

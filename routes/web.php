@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminUserControllerController;
 use App\Http\Controllers\PenjadwalanController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KegiatanController;
@@ -22,13 +24,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 // login
-Route::get('admin/login', [AuthenticatedSessionController::class, 'createAdminLogin'])->name('auth.loginadmin');
-Route::post('admin/login', [AuthenticatedSessionController::class, 'storeAdminLogin']);
-Route::post('admin/logout', [AuthenticatedSessionController::class, 'destroy'])->name('admin.logout');
-Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
 
 
 Route::middleware('auth')->group(function () {
@@ -39,9 +37,9 @@ Route::middleware('auth')->group(function () {
 // Rote role admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
     // Dashboard Admin
-    Route::get('dashboard/admin', function () {
-        return view('dashboard.admin');
-    })->name('dashboard.admin.index');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
     // kelas
     Route::get('/kelas', [KelasController::class, 'index'])->name('apps.kelas.index');
     Route::get('/kelas/create', [KelasController::class, 'create'])->name('apps.kelas.create');
@@ -57,19 +55,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/jurusan/{jurusan}', [JurusanController::class, 'update'])->name('apps.jurusan.update'); 
     Route::delete('/jurusan/{jurusan}', [JurusanController::class, 'destroy'])->name('apps.jurusan.destroy'); 
     // pembina
-    Route::get('/pembina', [PembinaController::class, 'index'])->name('apps.pembina.index');
-    Route::get('/pembina/create', [PembinaController::class, 'create'])->name('apps.pembina.create');
-    Route::post('/pembina/store', [PembinaController::class, 'store'])->name('apps.pembina.store');
-    Route::get('/pembina/{pembina}/edit', [PembinaController::class, 'edit'])->name('apps.pembina.edit'); 
-    Route::patch('/pembina/{pembina}', [PembinaController::class, 'update'])->name('apps.pembina.update'); 
-    Route::delete('/pembina/{pembina}', [PembinaController::class, 'destroy'])->name('apps.pembina.destroy'); 
+    Route::get('/userspembina', [AdminUserController::class, 'indexPembina'])->name('apps.users.indexPembina');
+    Route::get('/userspembina/create', [AdminUserController::class, 'createPembina'])->name('apps.users.createPembina');
+    Route::post('/userspembina/store', [AdminUserController::class, 'storePembina'])->name('apps.users.storePembina');
+    Route::get('/userspembina/{userspembina}/edit', [AdminUserController::class, 'editPembina'])->name('apps.users.editPembina'); 
+    Route::patch('/userspembina/{id}', [AdminUserController::class, 'updatePembina'])->name('apps.users.updatePembina'); 
+    Route::delete('/userspembina/{userspembina}', [AdminUserController::class, 'destroyPembina'])->name('apps.users.destroyPembina'); 
     // siswa
-    Route::get('/siswa', [SiswaController::class, 'index'])->name('apps.siswa.index');
-    Route::get('/siswa/create', [SiswaController::class, 'create'])->name('apps.siswa.create');
-    Route::post('/siswa/store', [SiswaController::class, 'store'])->name('apps.siswa.store');
-    Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('apps.siswa.edit'); 
-    Route::patch('/siswa/{siswa}', [SiswaController::class, 'update'])->name('apps.siswa.update'); 
-    Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])->name('apps.siswa.destroy'); 
+    Route::get('/userssiswa', [AdminUserController::class, 'indexSiswa'])->name('apps.users.indexSiswa');
+    Route::get('/userssiswa/create', [AdminUserController::class, 'createSiswa'])->name('apps.users.createSiswa');
+    Route::post('/userssiswa/store', [AdminUserController::class, 'storeSiswa'])->name('apps.users.storeSiswa');
+    Route::get('/userssiswa/{userssiswa}/edit', [AdminUserController::class, 'editSiswa'])->name('apps.users.editSiswa'); 
+    Route::patch('/userssiswa/{id}', [AdminUserController::class, 'updateSiswa'])->name('apps.users.updateSiswa'); 
+    Route::delete('/userssiswa/{userssiswa}', [AdminUserController::class, 'destroySiswa'])->name('apps.users.destroySiswa'); 
     // kegiatan
     Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('apps.kegiatan.index');
     Route::get('/kegiatan/create', [KegiatanController::class, 'create'])->name('apps.kegiatan.create');
@@ -84,6 +82,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/penjadwalan/{penjadwalan}/edit', [PenjadwalanController::class, 'edit'])->name('apps.penjadwalan.edit'); 
     Route::patch('/penjadwalan/{penjadwalan}', [PenjadwalanController::class, 'update'])->name('apps.penjadwalan.update'); 
     Route::delete('/penjadwalan/{penjadwalan}', [PenjadwalanController::class, 'destroy'])->name('apps.penjadwalan.destroy'); 
+});
+
+Route::middleware(['auth', 'role:pembina'])->group(function () {
+    Route::get('/dashboardpembina', function () {
+        return view('dashboardpembina');
+    })->name('dashboardpembina'); 
+});
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    Route::get('/dashboardsiswa', function () {
+        return view('dashboardsiswa');
+    })->name('dashboardsiswa'); 
 });
 
 require __DIR__.'/auth.php';

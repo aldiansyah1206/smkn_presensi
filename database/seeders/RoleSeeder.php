@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+
 
 class RoleSeeder extends Seeder
 {
@@ -14,19 +16,14 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // membuat role admin
-        Role::create([
-            'name' =>'admin',
-            'guard_name' => 'web'
-        ]);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'pembina']);
+        Role::firstOrCreate(['name' => 'siswa']);
 
-        Role::create([
-            'name' =>'pembina',
-            'guard_name' => 'web'
-        ]);
-
-        Role::create([
-            'name' =>'siswa',
-            'guard_name' => 'web'
-        ]);
+        // Tambahkan peran admin kepada pengguna dengan ID 1
+        $adminUser = User::find(1);
+        if ($adminUser) {
+            $adminUser->assignRole($adminRole);
+        }
     }
 }

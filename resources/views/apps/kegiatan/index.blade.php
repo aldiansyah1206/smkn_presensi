@@ -19,9 +19,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <?php $current_page = $kegiatan->currentPage(); ?>
+                            <?php $per_page = $kegiatan->perPage(); ?>
+                            <?php $no = 1 + $per_page * ($current_page - 1); ?>
                             @forelse ($kegiatan as $keg)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $no }}</td>
                                 <td>{{ $keg->name }}</td>
                                 <td>
                                     <div class="p-2">
@@ -36,6 +39,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            <?php $no++; ?>
                             @empty
                             <tr>
                                 <td colspan="3" class="text-center">Tidak ada data.</td>

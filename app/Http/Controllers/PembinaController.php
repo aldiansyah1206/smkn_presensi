@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Pembina;
 use App\Http\Requests\StorePembinaRequest;
 use App\Http\Requests\UpdatePembinaRequest;

@@ -9,7 +9,25 @@ class Pembina extends Model
 {
     use HasFactory;
     
-    protected $table = 'jurusan';
+    protected $table = 'pembina'; 
     protected $guarded = ['id'];
-    protected $fillable = ["name"];
+    protected $fillable = [
+        'user_id', 
+        'kegiatan_id', 
+        'jenis_kelamin', 
+        'no_hp', 
+        'alamat'
+    ];
+
+    // Mendefinisikan relasi dengan model User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Mendefinisikan relasi dengan model Kegiatan
+    public function kegiatan()
+    {
+        return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
+    }
 }
