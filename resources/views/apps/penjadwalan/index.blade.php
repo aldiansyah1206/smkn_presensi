@@ -5,7 +5,7 @@
         <!-- Form untuk Menambahkan Jadwal Baru -->
         <div class="col-md-4">
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header bg-primary text-white">
                     <h5 class="card-title" id="tambahModalLabel">Tambah Jadwal Kegiatan</h5>
                 </div>
                 <div class="card-body">
@@ -28,7 +28,7 @@
                             <label for="tanggal_selesai">Tgl Selesai</label>
                             <input type="date" name="tanggal_selesai" id="tanggal_selesai" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">Simpan</button>
+                        <button type="submit" class="btn btn-primary w-100">Simpan</button>
                     </form>
                 </div>
             </div>

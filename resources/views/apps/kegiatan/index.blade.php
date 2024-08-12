@@ -6,7 +6,7 @@
         <h4 class="text-bold">Kegiatan</h4>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <button class="btn btn-success my-3 mt-2" data-toggle="modal" data-target="#tambahModal">+Tambah</button>
+                <button class="btn btn-success my-2 mt-2" data-toggle="modal" data-target="#tambahModal">+Tambah</button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -29,7 +29,7 @@
                                 <td>
                                     <div class="p-2">
                                         <div class="row">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editKegiatanModal{{ $keg->id }}">
+                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editKegiatanModal{{ $keg->id }}">
                                                 Edit
                                             </button>
                                             <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#hapusKegiatanModal{{ $keg->id }}">
@@ -75,7 +75,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                 <button type="button" class="btn btn-primary" onclick="document.getElementById('tambahForm').submit();">Simpan</button>
             </div>
         </div>
@@ -115,7 +115,7 @@
 <div class="modal fade" id="hapusKegiatanModal{{ $keg->id }}" tabindex="-1" aria-labelledby="hapusKegiatanModalLabel{{ $keg->id }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title" id="hapusKegiatanModalLabel{{ $keg->id }}">Hapus Kegiatan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

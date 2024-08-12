@@ -9,26 +9,31 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <!-- Earnings (Annual) Card Example -->
-                    <div class="col-xl-4 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xl font-weight-bold text-success text-capitalize mb-2">
-                                            Data Siswa
+                    @if (!empty($countSiswa))
+                        @foreach($countSiswa as $kegiatanName => $siswaCount)
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xl font-weight-bold text-success text-capitalize mb-2">
+                                                Data Siswa {{ $kegiatanName }}
+                                            </div>
+                                            <div class="h5 mb-2 font-weight-bold text-gray-800">{{ $siswaCount }}</div>
                                         </div>
-                                        <div class="h5 mb-2 font-weight-bold text-gray-800">2</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                                        <div class="col-auto">
+                                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        @endforeach
+                    @else
+                        <p class="text-center">Tidak ada siswa yang terdaftar dalam kegiatan yang Anda kelola.</p>
+                    @endif
 
-                    <!-- Tasks Card Example -->
+                    <!-- Jadwal Kegiatan Card Example -->
                     <div class="col-xl-4 col-md-6 mb-4">
                         <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
@@ -59,7 +64,7 @@
                         </div>
                     </div>
 
-                    <!-- Pending Requests Card Example -->
+                    <!-- Data Presensi Card Example -->
                     <div class="col-xl-4 col-md-6 mb-4">
                         <div class="card border-left-warning shadow h-100 py-2">
                             <div class="card-body">
@@ -68,7 +73,7 @@
                                         <div class="text-xl font-weight-bold text-warning text-capitalize mb-2">
                                             Data Presensi
                                         </div>
-                                        <div class="h5 mb-2 font-weight-bold text-gray-800">18</div>
+                                        <div class="h5 mb-2 font-weight-bold text-gray-800"></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -77,6 +82,7 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>

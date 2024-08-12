@@ -44,6 +44,10 @@ class User extends Authenticatable
     ];
     public function pembina()
     {
-        return $this->hasMany(Pembina::class);
+        return $this->hasOne(Pembina::class);
+    }
+    public function kegiatan()
+    {
+        return $this->belongsTo(Kegiatan::class);
     }
 }

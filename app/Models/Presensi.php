@@ -8,4 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 class Presensi extends Model
 {
     use HasFactory;
+    protected $table = 'presensi';
+    protected $fillable = ['siswa_id', 'kegiatan_id','pembina_id', 'tanggal'];
+
+    /**
+     * Get the siswa that owns the Presensi.
+     */
+ public function siswa()
+    {
+        return $this->belongsTo(Siswa::class);
+    }
+
+    public function kegiatan()
+    {
+        return $this->belongsTo(Kegiatan::class);
+    }
+
+    public function pembina()
+    {
+        return $this->belongsTo(Pembina::class);
+    }
+
 }

@@ -6,7 +6,17 @@
         <h4 class="text-bold">Data Siswa</h4>
         <div class="card shadow mb-4">
             <div class="card-header py-2">
-                <button class="btn btn-success my-3 mt-2" data-toggle="modal" data-target="#tambahModal">+Tambah</button>
+                <div class="d-flex justify-content-between align-items-center my-2">
+                    <button class="btn btn-success" data-toggle="modal" data-target="#tambahModal">+Tambah</button>
+                    <form action="{{ route('apps.users.indexSiswa') }}" method="GET" class="mb-0">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Cari Siswa..." value="{{ request('search') }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Cari</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -49,7 +59,7 @@
                             <div class="modal fade" id="editSiswaModal{{ $s->id }}" tabindex="-1" aria-labelledby="editSiswaModalLabel{{ $s->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <div class="modal-header">
+                                        <div class="modal-header  bg-primary text-white">
                                             <h5 class="modal-title" id="editSiswaModalLabel{{ $s->id }}">Edit Siswa</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
@@ -68,7 +78,7 @@
                                                     <input type="email" class="form-control" id="email" name="email" value="{{ $s->user->email }}" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="password">Password (Biarkan kosong jika tidak ingin mengubah)</label>
+                                                    <label for="password">Password (Masukkan password sebelumnya atau kosongkan)</label>
                                                     <input type="password" class="form-control" id="password" name="password">
                                                 </div>
                                                 <div class="form-group">
@@ -125,7 +135,7 @@
                             <div class="modal fade" id="hapusSiswaModal{{ $s->id }}" tabindex="-1" aria-labelledby="hapusSiswaModalLabel{{ $s->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <div class="modal-header">
+                                        <div class="modal-header  bg-danger text-white">
                                             <h5 class="modal-title" id="hapusSiswaModalLabel{{ $s->id }}">Hapus Siswa</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
@@ -164,7 +174,7 @@
 <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header  bg-primary text-white">
                 <h5 class="modal-title" id="tambahModalLabel">Tambah Siswa</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

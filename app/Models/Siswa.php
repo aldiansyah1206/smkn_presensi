@@ -52,4 +52,8 @@ class Siswa extends Model
     {
         return $this->belongsTo(Kegiatan::class);
     }
+    public function presensi()
+    {
+        return $this->hasMany(Presensi::class);
+    }
 }

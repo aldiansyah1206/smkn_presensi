@@ -3,64 +3,91 @@
 namespace App\Http\Controllers;
 
 use App\Models\Presensi;
-use App\Http\Requests\StorePresensiRequest;
-use App\Http\Requests\UpdatePresensiRequest;
+use App\Models\Kegiatan;
+use App\Models\Siswa;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PresensiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $pembina = Auth::user()->pembina;
+        $presensi = Presensi::where('pembina_id', $pembina->id)->get();
+        return view('apps.presensi.index', compact('presensi'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $pembina = Auth::user()->pembina;
+        $kegiatan = Kegiatan::where('id', $pembina->kegiatan_id)->first();
+        $siswa = Siswa::where('kegiatan_id', $kegiatan->id)->get();
+        return view('apps.presensi.create', compact('kegiatan', 'siswa'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePresensiRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'siswa_id' => 'required|exists:siswa,id',
+            'tanggal' => 'required|date',
+            'jam_masuk' => 'required|date_format:H:i',
+            'status' => 'required|in:hadir,izin,sakit,alpa',
+        ]);
+
+        $pembina = Auth::user()->pembina;
+
+        Presensi::create([
+            'siswa_id' => $request->siswa_id,
+            'kegiatan_id' => $pembina->kegiatan_id,
+            'pembina_id' => $pembina->id,
+            'tanggal' => $request->tanggal,
+            'jam_masuk' => $request->jam_masuk,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('apps.presensi.index')->with('success', 'Presensi berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Presensi $presensi)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Presensi $presensi)
     {
-        //
+        $pembina = Auth::user()->pembina;
+        if ($presensi->pembina_id !== $pembina->id) {
+            abort(403);
+        }
+        return view('apps.presensi.edit', compact('presensi'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePresensiRequest $request, Presensi $presensi)
+    public function update(Request $request, Presensi $presensi)
     {
-        //
+        $request->validate([
+            'jam_masuk' => 'required|date_format:H:i',
+            'status' => 'required|in:hadir,izin,sakit,alpa',
+        ]);
+
+        $pembina = Auth::user()->pembina;
+        if ($presensi->pembina_id !== $pembina->id) {
+            abort(403);
+        }
+
+        $presensi->update([
+            'jam_masuk' => $request->jam_masuk,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('apps.presensi.index')->with('success', 'Presensi berhasil diperbarui');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Presensi $presensi)
     {
-        //
+        $pembina = Auth::user()->pembina;
+        if ($presensi->pembina_id !== $pembina->id) {
+            abort(403);
+        }
+
+        $presensi->delete();
+
+        return redirect()->route('apps.presensi.index')->with('success', 'Presensi berhasil dihapus');
     }
 }
+
+

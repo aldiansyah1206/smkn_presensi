@@ -14,19 +14,51 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
 {
-    public function indexPembina()
+    public function indexPembina(Request $request)
     {
+        $query = Pembina::with('user', 'kegiatan');
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->whereHas('user', function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+            })
+            ->orWhereHas('kegiatan', function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        $pembina = $query->paginate(5);
         $kegiatan = Kegiatan::all();
-        $pembina = Pembina::with('user')->paginate(5);
         return view('apps.users.indexPembina', compact('pembina', 'kegiatan'));
     }
 
-    public function indexSiswa()
+    public function indexSiswa(Request $request)
     {
+        $query = Siswa::with('user', 'kelas', 'jurusan', 'kegiatan');
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->whereHas('user', function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+            })
+            ->orWhereHas('kelas', function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%");
+            })
+            ->orWhereHas('jurusan', function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%");
+            })
+            ->orWhereHas('kegiatan', function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        $siswa = $query->paginate(5);
         $jurusan = Jurusan::all();
         $kelas = Kelas::all();
         $kegiatan = Kegiatan::all();
-        $siswa = Siswa::with('user')->paginate(5);
         return view('apps.users.indexSiswa', compact('siswa', 'kelas', 'jurusan', 'kegiatan'));
     }
 
@@ -82,7 +114,7 @@ class AdminUserController extends Controller
 
         $user->assignRole('siswa');
 
-        return redirect()->route('apps.users.indexSiswa')->with('success', 'Siswa created successfully.');
+        return redirect()->route('apps.users.indexSiswa')->with('success', 'Siswa berhasil ditambahkan.');
     }
 
     public function storePembina(Request $request)
@@ -96,6 +128,13 @@ class AdminUserController extends Controller
             'no_hp' => 'nullable|string|max:15',
             'alamat' => 'required|string|max:255',
         ]);
+
+        $kegiatan_id = $request->kegiatan_id;
+        $existingPembina = Pembina::where('kegiatan_id', $kegiatan_id)->first();
+    
+        if ($existingPembina) {
+            return redirect()->back()->withErrors(['kegiatan_id' => 'Kegiatan telah dipilih =.'])->withInput();
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -182,12 +221,24 @@ class AdminUserController extends Controller
             'alamat' => 'required|string|max:255',
         ]);
 
+        // Periksa apakah kegiatan sudah memiliki pembina selain pembina yang sedang diperbarui
+        $kegiatan_id = $request->kegiatan_id;
+        $existingPembina = Pembina::where('kegiatan_id', $kegiatan_id)
+                                ->where('id', '!=', $pembina->id)
+                                ->first();
+
+        if ($existingPembina) {
+            return redirect()->back()->withErrors(['kegiatan_id' => 'Kegiatan ini sudah memiliki pembina.'])->withInput();
+        }
+
+        // Update data pengguna
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password ? Hash::make($request->password) : $user->password,
         ]);
 
+        // Update data pembina
         $pembina->update([
             'jenis_kelamin' => $request->jenis_kelamin,
             'kegiatan_id' => $request->kegiatan_id,

@@ -1,14 +1,14 @@
 <?php
 
 use App\Http\Controllers\AdminUserController;
-use App\Http\Controllers\AdminUserControllerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PenjadwalanController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\KelasController;
-use App\Http\Controllers\PembinaController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\PresensiController;
+use App\Http\Controllers\PembinaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -37,9 +37,7 @@ Route::middleware('auth')->group(function () {
 // Rote role admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
     // Dashboard Admin
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // kelas
     Route::get('/kelas', [KelasController::class, 'index'])->name('apps.kelas.index');
     Route::get('/kelas/create', [KelasController::class, 'create'])->name('apps.kelas.create');
@@ -85,14 +83,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:pembina'])->group(function () {
-    Route::get('/dashboardpembina', function () {
-        return view('dashboardpembina');
-    })->name('dashboardpembina'); 
+    Route::get('/dashboardpembina', [DashboardController::class, 'indexPembina'])->name('dashboardpembina');
+    Route::get('/pembina/kegiatan', [PembinaController::class, 'index'])->name('pembina.kegiatan.index');
+    Route::get('presensi', [PresensiController::class, 'index'])->name('apps.presensi.index');
+    Route::get('presensi/create', [PresensiController::class, 'create'])->name('apps.presensi.create');
+    Route::post('presensi/store', [PresensiController::class, 'store'])->name('apps.presensi.store');
 });
+
 Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::get('/dashboardsiswa', function () {
         return view('dashboardsiswa');
     })->name('dashboardsiswa'); 
+    Route::post('presensi/now', [PresensiController::class, 'presensiNow'])->name('apps.presensi.siswa');
 });
+Route::get('/jadwal', [PenjadwalanController::class, 'indexForUsers'])
+    ->name('jadwal.user')
+    ->middleware(['auth', 'checkRole:pembina,siswa']);
 
 require __DIR__.'/auth.php';

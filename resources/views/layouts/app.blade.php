@@ -91,7 +91,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/penjadwalan'}}">
                         <i class="fas fa-clipboard-list"></i>
-                        <span>Jadwal</span></a>
+                        <span>Jadwal Kegiatan</span></a>
                 </li>
                 @endif
 
@@ -100,7 +100,7 @@
                  <hr class="sidebar-divider my-0">
                  <!-- Nav Item - Dashboard -->
                  <li class="nav-item">
-                     <a class="nav-link" href="{{'/dashboard-pembina'}}">
+                     <a class="nav-link" href="{{'/dashboardpembina'}}">
                          <i class="fas fa-fw fa-tachometer-alt"></i>
                          <span>Dashboard</span></a>
                  </li>
@@ -113,24 +113,35 @@
                  </div>
                 <!-- Nav Item - datapresensi  -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'/presensi'}}">
+                    <a class="nav-link" href="{{'/pembina/kegiatan' }}">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Data Siswa</span></a>
+                </li>
+                <!-- Nav Item - datapresensi  -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{'/presensi' }}">
                         <i class="fas fa-clipboard-list"></i>
                         <span>Presensi</span></a>
+                </li>
+                <!-- Nav Item penjadwalan  -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{'jadwal.user'}}">
+                        <i class="fas fa-calendar"></i>
+                        <span>Jadwal Kegiatan</span></a>
                 </li>
                 <!-- Nav Item - datapresensi  -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/riwayatpresensi'}}">
-                        <i class="fas fa-clipboard-list"></i>
+                        <i class="fas fa-history"></i>
                         <span>Riwayat Presensi</span></a>
                 </li>
                 @endif
-
                 @if (Auth::user()->hasRole('siswa'))
                  <!-- Divider -->
                  <hr class="sidebar-divider my-0">
                  <!-- Nav Item - Dashboard -->
                  <li class="nav-item">
-                     <a class="nav-link" href="{{'/dashboard-siswa'}}">
+                     <a class="nav-link" href="{{'/dashboardsiswa'}}">
                          <i class="fas fa-fw fa-tachometer-alt"></i>
                          <span>Dashboard</span></a>
                  </li>
@@ -141,35 +152,42 @@
                  <div class="sidebar-heading">
                      Menu
                  </div>
-                <!-- Nav Item - penjadwalan -->
+                <!-- Nav Item - presensi -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'penjadwalan'}}">
+                    <a class="nav-link" href="{{'/presensi/now'}}">
                         <i class="far fa-calendar-alt"></i>
-                        <span>Jadwal</span></a>
+                        <span>Presensi</span></a>
                 </li>
-                       <!-- Nav Item - penjadwalan -->
-                       <li class="nav-item">
-                        <a class="nav-link" href="{{'riwayatpresensisiswa'}}">
-                            <i class="far fa-calendar-alt"></i>
-                            <span>Riwayat Presensi</span></a>
-                    </li>
+                <!-- Nav Item penjadwalan  -->
+                <li class="nav-item">
+                <a class="nav-link" href="{{'jadwal.user'}}">
+                        <i class="fas fa-calendar"></i>
+                        <span>Jadwal Kegiatan</span></a>
+                </li>
+
+                <!-- Nav Item -riwayat presensi-->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{'riwayatpresensisiswa'}}">
+                        <i class="far fa-calendar-alt"></i>
+                        <span>Riwayat Presensi</span></a>
+                </li>
                 @endif
                 <!-- Divider -->
-                <!-- Untuk pengguna umum (pembina dan siswa) -->
-                @if (Auth::user()->hasRole('admin')||Auth::user()->hasRole('pembina') || Auth::user()->hasRole('siswa'))
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="nav-link btn btn-link">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
-                        </button>
-                    </form>
-                </li>
+                <!-- Untuk logout) -->
+                @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('pembina') || Auth::user()->hasRole('siswa'))
+                    <li class="nav-item">
+                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="nav-link btn btn-link">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </li>
                 @endif
 
                 <!-- Divider -->
-                <hr class="sidebar-divider">
+                <hr class="sidebar-divider c9">
 
                 <!-- Sidebar Toggler (Sidebar) -->
                 <div class="text-center d-none d-md-inline">
@@ -186,13 +204,10 @@
                 <div id="content" style="background-color: #F5F5F5">
                     <!-- Topbar -->
                     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    
                         <!-- Sidebar Toggle (Topbar) -->
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                             <i class="fa fa-bars"></i>
                         </button>
-    
-    
                         <!-- Topbar Navbar -->
                         <ul class="navbar-nav ml-auto">
                             <div class="topbar-divider d-none d-sm-block"></div>
@@ -203,24 +218,6 @@
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span></span>
                                 </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                    aria-labelledby="userDropdown">
-                                    <x-responsive-nav-link  :href="route('profile.edit')">
-                                      {{ __('Profile') }}
-                                    </x-responsive-nav-link>
-                                    <div class="dropdown-divider"></div>
-                                                <!-- Authentication -->
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-
-                                        <x-responsive-nav-link :href="route('logout')"
-                                                onclick="event.preventDefault();
-                                                            this.closest('form').submit();">
-                                            {{ __('Logout') }}
-                                        </x-responsive-nav-link>
-                                    </form>
-                                </div>
                             </li>
                         </ul>
                     </nav>

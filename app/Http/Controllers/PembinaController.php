@@ -2,66 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Pembina;
-use App\Http\Requests\StorePembinaRequest;
-use App\Http\Requests\UpdatePembinaRequest;
+use Illuminate\Http\Request;
+use App\Models\Kegiatan;
+use Illuminate\Support\Facades\Auth;
 
 class PembinaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-    }
+        // Mendapatkan Pembina yang sedang login
+        $pembina = Auth::user();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // Mendapatkan kegiatan yang dikelola oleh pembina
+        $kegiatan = Kegiatan::where('pembina_id', $pembina->id)->with('siswa.user')->first();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePembinaRequest $request)
-    {
-        //
-    }
+        // Mengambil siswa yang terdaftar dalam kegiatan yang dikelola pembina
+        $siswa = $kegiatan ? $kegiatan->siswa : collect();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pembina $pembina)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pembina $pembina)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePembinaRequest $request, Pembina $pembina)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pembina $pembina)
-    {
-        //
+        return view('pembina.kegiatan.index', compact('kegiatan', 'siswa'));
     }
 }

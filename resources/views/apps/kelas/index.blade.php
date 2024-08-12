@@ -29,7 +29,7 @@
                                 <td>
                                     <div class="p-2">
                                         <div class="row">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editKelasModal{{ $k->id }}">
+                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editKelasModal{{ $k->id }}">
                                                 Edit
                                             </button>
                                             <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#hapusKelasModal{{ $k->id }}">
@@ -74,7 +74,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                 <button type="button" class="btn btn-primary" onclick="document.getElementById('tambahForm').submit();">Simpan</button>
             </div>
         </div>
@@ -114,7 +114,7 @@
 <div class="modal fade" id="hapusKelasModal{{ $k->id }}" tabindex="-1" aria-labelledby="hapusKelasModalLabel{{ $k->id }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title" id="hapusKelasModalLabel{{ $k->id }}">Hapus Kelas</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

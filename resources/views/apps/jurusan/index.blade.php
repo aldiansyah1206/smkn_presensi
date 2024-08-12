@@ -6,7 +6,7 @@
         <h4 class="text-bold">Jurusan</h4>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <button class="btn btn-success my-3 mt-2" data-toggle="modal" data-target="#tambahModal">+Tambah</button>
+                <button class="btn btn-success my-2 mt-2" data-toggle="modal" data-target="#tambahModal">+Tambah</button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -19,14 +19,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <?php $current_page = $jurusan->currentPage(); ?>
+                            <?php $per_page = $jurusan->perPage(); ?>
+                            <?php $no = 1 + $per_page * ($current_page - 1); ?>
                             @forelse ($jurusan as $j)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $no }}</td>
                                 <td>{{ $j->name }}</td>
                                 <td>
                                     <div class="p-2">
                                         <div class="row">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editJurusanModal{{ $j->id }}">
+                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editJurusanModal{{ $j->id }}">
                                                 Edit
                                             </button>
                                             <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#hapusJurusanModal{{ $j->id }}">
@@ -36,6 +39,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            <?php $no++; ?>
                             @empty
                             <tr>
                                 <td colspan="3" class="text-center">Tidak ada data.</td>
@@ -73,7 +77,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                 <button type="button" class="btn btn-primary" onclick="document.getElementById('tambahForm').submit();">Simpan</button>
             </div>
         </div>
@@ -113,7 +117,7 @@
 <div class="modal fade" id="hapusJurusanModal{{ $j->id }}" tabindex="-1" aria-labelledby="hapusJurusanModalLabel{{ $j->id }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title" id="hapusJurusanModalLabel{{ $j->id }}">Hapus Jurusan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

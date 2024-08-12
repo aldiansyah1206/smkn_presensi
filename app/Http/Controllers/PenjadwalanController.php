@@ -91,9 +91,12 @@ class PenjadwalanController extends Controller
      * Display the specified resource.
      */
     public function show(Penjadwalan $penjadwalan)
-    {
-        return view('apps.penjadwalan.show', [
-            "penjadwalan" => $penjadwalan,
+    {     
+        $kegiatan = Kegiatan::all();
+
+        return view('apps.penjadwalan.index', [
+            'penjadwalan' => $penjadwalan->toJson(),
+            'kegiatan' => $kegiatan
         ]);
     }
 
