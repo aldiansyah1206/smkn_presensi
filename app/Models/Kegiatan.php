@@ -22,6 +22,10 @@ class Kegiatan extends Model
     }
     public function siswa()
     {
+<<<<<<< HEAD
         return $this->hasMany(Siswa::class);
+=======
+        return $this->belongsTo(Siswa::class);
+>>>>>>> aecef906fabfded2bee697e9c7154cf56a797276
     }
 }
