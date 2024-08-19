@@ -125,7 +125,7 @@
                 </li>
                 <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'jadwal.user'}}">
+                    <a class="nav-link" href="{{'jadwaluser'}}">
                         <i class="fas fa-calendar"></i>
                         <span>Jadwal Kegiatan</span></a>
                 </li>
@@ -160,7 +160,7 @@
                 </li>
                 <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
-                <a class="nav-link" href="{{'jadwal.user'}}">
+                <a class="nav-link" href="{{'jadwaluser'}}">
                         <i class="fas fa-calendar"></i>
                         <span>Jadwal Kegiatan</span></a>
                 </li>

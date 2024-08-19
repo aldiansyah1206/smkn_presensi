@@ -7,6 +7,7 @@ use App\Models\Penjadwalan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class PenjadwalanController extends Controller
 {
@@ -42,7 +43,25 @@ class PenjadwalanController extends Controller
             "kegiatan" => Kegiatan::all()
         ]);
     }
+    public function indexForUsers()
+    {
+        $penjadwalan = Penjadwalan::with('kegiatan')->get()->map(function ($event) {
+            $tanggalMulai = Carbon::parse($event->tanggal_mulai);
+            $tanggalSelesai = Carbon::parse($event->tanggal_selesai);
     
+            return [
+                'id' => $event->id,
+                'title' => $event->kegiatan->name,
+                'start' => $tanggalMulai->format('Y-m-d'),
+                'end' => $tanggalSelesai->format('Y-m-d'),
+                'kegiatan' => $event->kegiatan
+            ];
+        });
+    
+        return view('apps.penjadwalan.jadwaluser', [
+            "penjadwalan" => $penjadwalan->toJson(),
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.

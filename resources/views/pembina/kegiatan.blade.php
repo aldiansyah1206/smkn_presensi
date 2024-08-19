@@ -2,33 +2,37 @@
 
 @section('content')
 <div class="container">
-    <h2>Kegiatan yang Dikelola</h2>
-
     @if ($kegiatan)
-        <h3>{{ $kegiatan->name }}</h3>
-        <h4>Daftar Siswa:</h4>
+        <h3>Daftar Siswa</h3>
+        <a href="{{ route('pembina.siswaPdf') }}" class="btn btn-primary mb-3">Export PDF</a>
         <table class="table">
             <thead>
                 <tr>
                     <th>No</th>
                     <th>Nama</th>
-                    <th>Email</th>
                     <th>Kelas</th>
                     <th>Jurusan</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Kegiatan</th>
+                    <th>No HP</th>
+                    <th>Alamat</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($siswa as $index => $item)
+                @forelse ($siswa as $index => $s)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $item->user->name }}</td>
-                        <td>{{ $item->user->email }}</td>
-                        <td>{{ $item->kelas->name }}</td>
-                        <td>{{ $item->jurusan->name }}</td>
+                        <td>{{ $s->user->name }}</td>
+                        <td>{{ $s->kelas->name }}</td>
+                        <td>{{ $s->jurusan->name }}</td>
+                        <td>{{ $s->jenis_kelamin }}</td> 
+                        <td>{{ $s->kegiatan->name }}</td>
+                        <td>{{ $s->no_hp }}</td>
+                        <td>{{ $s->alamat }}</td> 
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5">Tidak ada siswa yang terdaftar.</td>
+                        <td colspan="8">Tidak ada siswa yang terdaftar.</td>
                     </tr>
                 @endforelse
             </tbody>

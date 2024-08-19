@@ -24,6 +24,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 // login
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -85,6 +86,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:pembina'])->group(function () {
     Route::get('/dashboardpembina', [DashboardController::class, 'indexPembina'])->name('dashboardpembina');
     Route::get('/pembina/kegiatan', [PembinaController::class, 'index'])->name('pembina.kegiatan.index');
+    Route::get('/pembina/siswaPdf', [PembinaController::class, 'exportPDF'])->name('pembina.siswaPdf');
     Route::get('presensi', [PresensiController::class, 'index'])->name('apps.presensi.index');
     Route::get('presensi/create', [PresensiController::class, 'create'])->name('apps.presensi.create');
     Route::post('presensi/store', [PresensiController::class, 'store'])->name('apps.presensi.store');
@@ -96,8 +98,6 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     })->name('dashboardsiswa'); 
     Route::post('presensi/now', [PresensiController::class, 'presensiNow'])->name('apps.presensi.siswa');
 });
-Route::get('/jadwal', [PenjadwalanController::class, 'indexForUsers'])
-    ->name('jadwal.user')
-    ->middleware(['auth', 'checkRole:pembina,siswa']);
-
+Route::get('/jadwaluser', [PenjadwalanController::class, 'indexForUsers'])->name('apps.penjadwalan.jadwaluser')
+    ->middleware(['auth', 'role:siswa|pembina']);
 require __DIR__.'/auth.php';

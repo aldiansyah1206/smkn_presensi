@@ -22,21 +22,20 @@ class DashboardController extends Controller
     }
     public function indexPembina()
     {  
-        $pembina = auth()->user(); // Mendapatkan pembina yang sedang login
-        $kegiatan = $pembina->kegiatan; // Mendapatkan kegiatan yang dikelola pembina
+        $pembinaId = auth()->user()->id; 
 
-        // Membuat array untuk menyimpan count siswa
-        $countSiswa = [];
-
-        if ($kegiatan && $kegiatan->isNotEmpty()) { // Cek apakah pembina memiliki kegiatan
-            foreach ($kegiatan as $keg) {
-                // Menghitung jumlah siswa yang mengikuti kegiatan ini
-                $countSiswa[$keg->name] = Siswa::where('kegiatan_id', $keg->id)->count();
-            }
+        // Ambil kegiatan yang dibina oleh pembina ini
+        $kegiatan = Kegiatan::where('pembina_id', $pembinaId)->first();
+    
+        if ($kegiatan) {
+            // Hitung jumlah siswa yang terkait dengan kegiatan ini
+            $countSiswaKegiatan = $kegiatan->siswa()->count();
         } else {
-            $countSiswa = null; // Set countSiswa to null if no activities found
+            $countSiswaKegiatan = 0;
         }
 
-        return view('dashboardpembina', compact('countSiswa'));
+     
+
+    return view('dashboardpembina', compact('countSiswaKegiatan' ));
     }
 }
