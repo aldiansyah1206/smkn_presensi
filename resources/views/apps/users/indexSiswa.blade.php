@@ -43,7 +43,7 @@
                                 <td>{{ $s->user->roles->pluck('name')->implode(', ') }}</td>
                                 <td>{{ $s->kelas->name }}</td>
                                 <td>{{ $s->jurusan->name }}</td>
-                                <td>{{ $s->kegiatan->name }}</td>
+                                <td>{{ $s->kegiatan->pluck('name')->implode(', ') }}</td>
                                 <td>{{ $s->jenis_kelamin }}</td>
                                 <td>{{ $s->no_hp }}</td>
                                 <td>{{ $s->alamat }}</td>
@@ -112,6 +112,7 @@
                                                 <div class="form-group">
                                                     <label for="jenis_kelamin">Jenis Kelamin</label>
                                                     <select id="jenis_kelamin" name="jenis_kelamin" class="form-control" required>
+                                                        <option selected disabled>Pilih Jenis Kelamin</option>
                                                         <option value="l" {{ $s->jenis_kelamin == 'l' ? 'selected' : '' }}>Laki-laki</option>
                                                         <option value="p" {{ $s->jenis_kelamin == 'p' ? 'selected' : '' }}>Perempuan</option>
                                                     </select>
@@ -164,7 +165,7 @@
                 </table>
             </div>
             <div class="d-flex justify-content-center">
-                {{ $siswa->links() }}
+                {{ $siswa->links('pagination::simple-bootstrap-5') }}
             </div>
         </div>
     </div>

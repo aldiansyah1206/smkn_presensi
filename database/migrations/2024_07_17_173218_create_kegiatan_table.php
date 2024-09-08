@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('kegiatan', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('pembina_id'); 
             $table->timestamps();
+            $table->foreign('pembina_id')->references('id')->on('pembina')->onDelete('cascade');
         });
     }
 

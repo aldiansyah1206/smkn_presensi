@@ -12,9 +12,20 @@ class PresensiController extends Controller
 {
     public function index()
     {
-        $pembina = Auth::user()->pembina;
-        $presensi = Presensi::where('pembina_id', $pembina->id)->get();
-        return view('apps.presensi.index', compact('presensi'));
+        $pembina = auth()->user(); // Mendapatkan pembina yang sedang login
+        $kegiatan = $pembina->kegiatan; // Mengambil kegiatan yang ditangani oleh pembina
+        $tanggalHariIni = now()->format('Y-m-d'); // Mendapatkan tanggal hari ini
+
+         $kegiatan = Kegiatan::where('pembina_id', $pembina->id)
+            ->with(['siswa.user', 'siswa.kelas', 'siswa.jurusan'])
+            ->get();
+            if ($kegiatan->isEmpty()) {
+                return view('pembina.presensisiswa', ['kegiatan' => collect(), 'siswa' => collect()]);
+            }
+    
+            // Mengurutkan siswa berdasarkan kegiatan
+            $siswa = $kegiatan->flatMap->siswa->sortBy('user.name');
+        return view('pembina.presensisiswa', compact('kegiatan', 'siswa','tanggalHariIni'));
     }
 
     public function create()
@@ -22,30 +33,25 @@ class PresensiController extends Controller
         $pembina = Auth::user()->pembina;
         $kegiatan = Kegiatan::where('id', $pembina->kegiatan_id)->first();
         $siswa = Siswa::where('kegiatan_id', $kegiatan->id)->get();
-        return view('apps.presensi.create', compact('kegiatan', 'siswa'));
+        return view('pembina.presensisiswa', compact('kegiatan', 'siswa'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'siswa_id' => 'required|exists:siswa,id',
             'tanggal' => 'required|date',
-            'jam_masuk' => 'required|date_format:H:i',
-            'status' => 'required|in:hadir,izin,sakit,alpa',
+            'siswa_id' => 'required|exists:siswa,id',
+            'kegiatan_id' => 'required|exists:kegiatan,id',
         ]);
-
-        $pembina = Auth::user()->pembina;
-
-        Presensi::create([
-            'siswa_id' => $request->siswa_id,
-            'kegiatan_id' => $pembina->kegiatan_id,
-            'pembina_id' => $pembina->id,
-            'tanggal' => $request->tanggal,
-            'jam_masuk' => $request->jam_masuk,
-            'status' => $request->status,
-        ]);
-
-        return redirect()->route('apps.presensi.index')->with('success', 'Presensi berhasil ditambahkan');
+    
+        $presensi = new Presensi();
+        $presensi->tanggal = $request->tanggal;
+        $presensi->siswa_id = $request->siswa_id;
+        $presensi->kegiatan_id = $request->kegiatan_id;
+        $presensi->pembina_id = auth()->user()->id; // Atur ID pembina saat ini
+        $presensi->save();
+    
+        return redirect()->back()->with('success', 'Presensi berhasil ditambahkan.');
     }
 
     public function edit(Presensi $presensi)
