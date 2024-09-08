@@ -22,6 +22,7 @@ class DashboardController extends Controller
     }
     public function indexPembina()
     {  
+
          // Ambil user yang login
         $user = auth()->user();
 
@@ -39,6 +40,17 @@ class DashboardController extends Controller
         // Cek apakah kegiatan ada
         if ($kegiatan) {
             // Hitung jumlah siswa yang terdaftar pada kegiatan ini
+            $countSiswaKegiatan = $kegiatan->siswa()->count();
+        } else {
+            $countSiswaKegiatan = 0;
+        }
+        $pembinaId = auth()->user()->id; 
+
+        // Ambil kegiatan yang dibina oleh pembina ini
+        $kegiatan = Kegiatan::where('pembina_id', $pembinaId)->first();
+    
+        if ($kegiatan) {
+            // Hitung jumlah siswa yang terkait dengan kegiatan ini
             $countSiswaKegiatan = $kegiatan->siswa()->count();
         } else {
             $countSiswaKegiatan = 0;

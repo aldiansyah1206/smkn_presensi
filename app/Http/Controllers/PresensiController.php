@@ -17,6 +17,10 @@ class PresensiController extends Controller
         $tanggalHariIni = now()->format('Y-m-d'); // Mendapatkan tanggal hari ini
 
          $kegiatan = Kegiatan::where('pembina_id', $pembina->id)
+
+    $kegiatan = $pembina->kegiatan; // Mengambil kegiatan yang ditangani oleh pembina
+    $tanggalHariIni = now()->format('Y-m-d'); // Mendapatkan tanggal hari ini
+    $kegiatan = Kegiatan::where('pembina_id', $pembina->id)
             ->with(['siswa.user', 'siswa.kelas', 'siswa.jurusan'])
             ->get();
             if ($kegiatan->isEmpty()) {
@@ -26,6 +30,9 @@ class PresensiController extends Controller
             // Mengurutkan siswa berdasarkan kegiatan
             $siswa = $kegiatan->flatMap->siswa->sortBy('user.name');
         return view('pembina.presensisiswa', compact('kegiatan', 'siswa','tanggalHariIni'));
+
+    return view('pembina.presensisiswa', compact('kegiatan', 'siswa','tanggalHariIni'));
+
     }
 
     public function create()
