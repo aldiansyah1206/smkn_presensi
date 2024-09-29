@@ -21,7 +21,11 @@ class DashboardController extends Controller
         return view('dashboard', compact('countPembina', 'countSiswa','countKelas', 'countJurusan', 'countKegiatan'));
     }
     public function indexPembina()
-    {  
+    { 
+         // Ambil user yang login
+        $user = auth()->user();
+
+
          // Ambil user yang login
         $user = auth()->user();
 
@@ -43,7 +47,17 @@ class DashboardController extends Controller
         } else {
             $countSiswaKegiatan = 0;
         }
+        $pembinaId = auth()->user()->id; 
 
+        // Ambil kegiatan yang dibina oleh pembina ini
+        $kegiatan = Kegiatan::where('pembina_id', $pembinaId)->first();
+    
+        if ($kegiatan) {
+            // Hitung jumlah siswa yang terkait dengan kegiatan ini
+            $countSiswaKegiatan = $kegiatan->siswa()->count();
+        } else {
+            $countSiswaKegiatan = 0;
+        }
     return view('dashboardpembina', compact('countSiswaKegiatan' ));
     }
 }

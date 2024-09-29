@@ -41,6 +41,9 @@
                                 <td>{{ $p->user->roles->pluck('name')->implode(', ') }}</td>
                                 <td>{{ $p->kegiatan->name ?? 'N/A' }}</td>
                                 <td>{{ $p->jenis_kelamin }}</td>
+                                <td>{{ $p->kegiatan->pluck('name')->implode(', ') }}</td>
+                                <td>{{ $p->jenis_kelamin }}</td>
+                                <td>{{ $p->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
                                 <td>{{ $p->no_hp }}</td>
                                 <td>{{ $p->alamat }}</td>
                                 <td>

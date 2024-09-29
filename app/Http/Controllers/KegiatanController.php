@@ -46,7 +46,13 @@ class KegiatanController extends Controller
             'pembina_id' => 'required|exists:pembina,id',
         ]);
 
+
         $pembina = Pembina::find($request->pembina_id);
+        $pembina = Pembina::findOrFail($request->pembina_id);
+
+        if (!$pembina->canAddKegiatan()) {
+            return redirect()->back()->withErrors(['pembina_id' => 'Pembina sudah mengampu 2 kegiatan.'])->withInput();
+        }
 
         $kegiatan = new Kegiatan;
         $kegiatan->name = $request->name;
@@ -88,9 +94,8 @@ class KegiatanController extends Controller
             'name' => 'required|string|max:255|unique:kegiatan,name,' . $kegiatan->id,
             'pembina_id' => 'required|exists:pembina,id',
         ]);
-
         $pembina = Pembina::find($request->pembina_id);
-
+        $pembina = Pembina::findOrFail($request->pembina_id);
         if ($kegiatan->pembina_id != $request->pembina_id && !$pembina->canAddKegiatan()) {
             return redirect()->back()->withErrors(['pembina_id' => 'Pembina sudah mengampu 2 kegiatan.'])->withInput();
         }

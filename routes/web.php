@@ -94,6 +94,9 @@ Route::middleware(['auth', 'role:pembina'])->group(function () {
     Route::put('/presensi/{presensi}', [PresensiController::class, 'update'])->name('apps.presensi.update');
     Route::delete('/presensi/{presensi}', [PresensiController::class, 'destroy'])->name('apps.presensi.destroy');
     Route::get('/jadwalpembina', [PenjadwalanController::class, 'indexjadwalpembina'])->name('apps.penjadwalan.jadwalpembina');
+    Route::get('presensi', [PresensiController::class, 'index'])->name('apps.presensi.index');
+    Route::get('presensi/create', [PresensiController::class, 'create'])->name('apps.presensi.create');
+    Route::post('presensi/store', [PresensiController::class, 'store'])->name('apps.presensi.store');
 });
 
 Route::middleware(['auth', 'role:siswa'])->group(function () {
@@ -103,4 +106,6 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::post('presensi/now', [PresensiController::class, 'presensiNow'])->name('apps.presensi.siswa');
     Route::get('/jadwalsiswa', [PenjadwalanController::class, 'indexjadwalsiswa'])->name('apps.penjadwalan.jadwalsiswa');
 });
+Route::get('/jadwaluser', [PenjadwalanController::class, 'indexForUsers'])->name('apps.penjadwalan.jadwaluser')
+    ->middleware(['auth', 'role:siswa|pembina']);
 require __DIR__.'/auth.php';

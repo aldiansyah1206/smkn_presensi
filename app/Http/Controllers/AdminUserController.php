@@ -112,6 +112,9 @@ class AdminUserController extends Controller
             'alamat' => $request->alamat,
         ]);
 
+        $kegiatanIds = is_array($request->kegiatan_id) ? $request->kegiatan_id : [$request->kegiatan_id];
+        $siswa->kegiatan()->sync($kegiatanIds);
+        
         $user->assignRole('siswa');
 
         return redirect()->route('apps.users.indexSiswa')->with('success', 'Siswa berhasil ditambahkan.');

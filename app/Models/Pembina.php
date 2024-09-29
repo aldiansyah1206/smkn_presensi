@@ -23,10 +23,20 @@ class Pembina extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     // Mendefinisikan relasi dengan model Kegiatan
     public function kegiatan()
     {
         return $this->hasOne(Kegiatan::class);
+    }
+    public function canAddKegiatan()
+    {
+        return $this->kegiatan()->count() < 2;
+    }
+    // Mendefinisikan relasi dengan model Kegiatan
+    public function kegiatan()
+    {
+        return $this->hasMany(Kegiatan::class);
     }
     public function presensi()
     {

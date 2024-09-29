@@ -195,4 +195,4 @@ class PenjadwalanController extends Controller
             return response()->json(['message' => 'Gagal menghapus kegiatan.'], 500);
         }
     }
-}  
+}
