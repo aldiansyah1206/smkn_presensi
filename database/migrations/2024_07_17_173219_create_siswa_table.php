@@ -16,17 +16,18 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('kelas_id');
             $table->unsignedBigInteger('jurusan_id');
-            $table->unsignedBigInteger('kegiatan_id');
+            $table->unsignedBigInteger('kegiatan_id')->nullable();
             $table->enum('jenis_kelamin', ["p", "l"]);
-            $table->string('no_hp');
+            $table->string('no_hp')->nullable();
             $table->text('alamat');
             $table->rememberToken();
             $table->timestamps();
+
+            // Menambahkan foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('jurusan_id')->references('id')->on('jurusan')->onDelete('cascade');
             $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
-            $table->foreign('kegiatan_id')->references('id')->on('kegiatan')->onDelete('cascade');
-            
+            $table->foreign('kegiatan_id')->references('id')->on('kegiatan')->onDelete('set null');
         });
     }
 

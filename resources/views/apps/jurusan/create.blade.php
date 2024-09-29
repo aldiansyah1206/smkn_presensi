@@ -5,6 +5,12 @@
         <div class="card">
             <div class="card-header bg-primary text-white ">
                 <h4 class="card-title">Tambah Data Jurusan</h4>
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari Pembina..." value="{{ request('search') }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Cari</button>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <form action="{{ route("apps.jurusan.store") }}" method="POST">

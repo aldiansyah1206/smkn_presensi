@@ -17,6 +17,10 @@ class JurusanSeeder extends Seeder
             ['name' => 'ATP 1'],
             ['name' => 'TKJ 1'],
             ['name' => 'TBSM 1'],
+            ['name' => 'AK 2'],
+            ['name' => 'ATP 2'],
+            ['name' => 'TKJ 2'],
+            ['name' => 'TBSM 2'],
         ]);
     }
 }

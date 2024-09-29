@@ -50,8 +50,10 @@ class Siswa extends Model
      */
     public function kegiatan()
     {
-        return $this->belongsTo(Kegiatan::class);
+        return $this->belongsTo(Kegiatan::class,'kegiatan_id');
     }
+
+
     public function presensi()
     {
         return $this->hasMany(Presensi::class);

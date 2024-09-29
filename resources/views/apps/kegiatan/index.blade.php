@@ -15,6 +15,7 @@
                             <tr>
                                 <th scope="col" class="text-center">No</th>
                                 <th scope="col">Nama Kegiatan</th>
+                                <th scope="col">Pembina</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>
@@ -26,6 +27,7 @@
                             <tr>
                                 <td>{{ $no }}</td>
                                 <td>{{ $keg->name }}</td>
+                                <td>{{ $keg->pembina->user->name ?? 'Pembina tidak tersedia' }}</td>
                                 <td>
                                     <div class="p-2">
                                         <div class="row">
@@ -42,7 +44,7 @@
                             <?php $no++; ?>
                             @empty
                             <tr>
-                                <td colspan="3" class="text-center">Tidak ada data.</td>
+                                <td colspan="4" class="text-center">Tidak ada data.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -67,10 +69,18 @@
             <div class="modal-body">
                 <form id="tambahForm" action="{{ route('apps.kegiatan.store') }}" method="POST">
                     @csrf
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="name">Nama Kegiatan</label>
                         <input type="text" name="name" class="form-control" required>
-                       
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="pembina_id">Pilih Pembina</label>
+                        <select class="form-control" id="pembina_id" name="pembina_id" required>
+                            <option value="" disabled selected>Pilih Pembina...</option>
+                            @foreach($pembina as $p)
+                                <option value="{{ $p->id }}">{{ $p->user->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </form>
             </div>
@@ -101,6 +111,14 @@
                         @error('name')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                         @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="pembina_id">Pilih Pembina</label>
+                        <select class="form-control" id="pembina_id" name="pembina_id" required>
+                            @foreach($pembina as $p)
+                                <option value="{{ $p->user->id }}" {{ $keg->user->pembina_id == $p->user->id ? 'selected' : '' }}>{{ $p->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

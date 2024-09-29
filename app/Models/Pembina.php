@@ -13,7 +13,6 @@ class Pembina extends Model
     protected $guarded = ['id'];
     protected $fillable = [
         'user_id', 
-        'kegiatan_id', 
         'jenis_kelamin', 
         'no_hp', 
         'alamat'
@@ -24,11 +23,10 @@ class Pembina extends Model
     {
         return $this->belongsTo(User::class);
     }
-
     // Mendefinisikan relasi dengan model Kegiatan
     public function kegiatan()
     {
-        return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
+        return $this->hasOne(Kegiatan::class);
     }
     public function presensi()
     {

@@ -14,19 +14,15 @@ class Presensi extends Model
     /**
      * Get the siswa that owns the Presensi.
      */
- public function siswa()
+    public function siswa()
     {
         return $this->belongsTo(Siswa::class);
     }
 
+
     public function kegiatan()
     {
         return $this->belongsTo(Kegiatan::class);
-    }
-
-    public function pembina()
-    {
-        return $this->belongsTo(Pembina::class);
     }
 
 }

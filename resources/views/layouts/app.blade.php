@@ -114,7 +114,7 @@
                 <!-- Nav Item - datapresensi  -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/pembina/kegiatan' }}">
-                        <i class="fas fa-clipboard-list"></i>
+                        <i class="fas fa-user-friends"></i>
                         <span>Data Siswa</span></a>
                 </li>
                 <!-- Nav Item - datapresensi  -->
@@ -125,7 +125,7 @@
                 </li>
                 <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'jadwal.user'}}">
+                    <a class="nav-link" href="{{'/jadwalpembina'}}">
                         <i class="fas fa-calendar"></i>
                         <span>Jadwal Kegiatan</span></a>
                 </li>
@@ -152,15 +152,9 @@
                  <div class="sidebar-heading">
                      Menu
                  </div>
-                <!-- Nav Item - presensi -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{{'/presensi/now'}}">
-                        <i class="far fa-calendar-alt"></i>
-                        <span>Presensi</span></a>
-                </li>
                 <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
-                <a class="nav-link" href="{{'jadwal.user'}}">
+                <a class="nav-link" href="{{'/jadwalsiswa'}}">
                         <i class="fas fa-calendar"></i>
                         <span>Jadwal Kegiatan</span></a>
                 </li>
