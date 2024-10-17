@@ -106,7 +106,7 @@ class AdminUserController extends Controller
             'user_id' => $user->id,
             'kelas_id' => $request->kelas_id,
             'jurusan_id' => $request->jurusan_id,
-            'kegiatan_id' => $request->kegiatan_id,
+            'kegiatan_id' => $request->kegiatan_id, // Simpan kegiatan_id langsung
             'jenis_kelamin' => $request->jenis_kelamin,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
@@ -124,18 +124,10 @@ class AdminUserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'jenis_kelamin' => 'required|string|max:10',
-            'kegiatan_id' => 'required|exists:kegiatan,id',
             'no_hp' => 'nullable|string|max:15',
             'alamat' => 'required|string|max:255',
         ]);
-
-        $kegiatan_id = $request->kegiatan_id;
-        $existingPembina = Pembina::where('kegiatan_id', $kegiatan_id)->first();
-    
-        if ($existingPembina) {
-            return redirect()->back()->withErrors(['kegiatan_id' => 'Kegiatan telah dipilih =.'])->withInput();
-        }
-
+       
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -145,7 +137,6 @@ class AdminUserController extends Controller
         Pembina::create([
             'user_id' => $user->id,
             'jenis_kelamin' => $request->jenis_kelamin,
-            'kegiatan_id' => $request->kegiatan_id,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
         ]);
@@ -216,21 +207,17 @@ class AdminUserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
             'jenis_kelamin' => 'required|string|max:10',
-            'kegiatan_id' => 'required|exists:kegiatan,id',
             'no_hp' => 'nullable|string|max:15',
             'alamat' => 'required|string|max:255',
         ]);
+            // Cek apakah pembina sudah mengelola kegiatan lain (kecuali kegiatan yang sama)
+            $pembinaExists = Pembina::where('kegiatan_id', $request->kegiatan_id)
+                ->where('id', '!=', $pembina->id)
+                ->exists();
 
-        // Periksa apakah kegiatan sudah memiliki pembina selain pembina yang sedang diperbarui
-        $kegiatan_id = $request->kegiatan_id;
-        $existingPembina = Pembina::where('kegiatan_id', $kegiatan_id)
-                                ->where('id', '!=', $pembina->id)
-                                ->first();
-
-        if ($existingPembina) {
-            return redirect()->back()->withErrors(['kegiatan_id' => 'Kegiatan ini sudah memiliki pembina.'])->withInput();
-        }
-
+            if ($pembinaExists) {
+                return redirect()->back()->withErrors('Pembina ini sudah mengelola kegiatan lain.');
+            }
         // Update data pengguna
         $user->update([
             'name' => $request->name,
@@ -241,7 +228,6 @@ class AdminUserController extends Controller
         // Update data pembina
         $pembina->update([
             'jenis_kelamin' => $request->jenis_kelamin,
-            'kegiatan_id' => $request->kegiatan_id,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
         ]);

@@ -49,7 +49,9 @@
                     </table>
                 </div>
             </div>
-            {{ $jurusan->links('pagination::simple-bootstrap-5') }}
+            <div class="d-flex justify-content-center">
+                {{ $jurusan->links('pagination::simple-bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>

@@ -2,92 +2,106 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pembina;
 use App\Models\Presensi;
-use App\Models\Kegiatan;
 use App\Models\Siswa;
+ 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PresensiController extends Controller
-{
+{ 
     public function index()
     {
-        $pembina = Auth::user()->pembina;
-        $presensi = Presensi::where('pembina_id', $pembina->id)->get();
-        return view('apps.presensi.index', compact('presensi'));
-    }
+        $user = Auth::user();
+        $pembina = Pembina::where('user_id', $user->id)->first();
 
+        if (!$pembina) {
+            return redirect()->back()->with('error', 'Akses ditolak.');
+        }
+
+        $kegiatan = $pembina->kegiatan;
+        $presensiList = Presensi::where('kegiatan_id', $kegiatan->id)->get();
+
+        return view('pembina.presensi', compact('pembina', 'kegiatan', 'presensiList'));
+    }
     public function create()
     {
-        $pembina = Auth::user()->pembina;
-        $kegiatan = Kegiatan::where('id', $pembina->kegiatan_id)->first();
-        $siswa = Siswa::where('kegiatan_id', $kegiatan->id)->get();
-        return view('apps.presensi.create', compact('kegiatan', 'siswa'));
+        $user = Auth::user();
+        $pembina = Pembina::where('user_id', $user->id)->first();
+
+        if (!$pembina) {
+            return redirect()->back()->with('error', 'Akses ditolak.');
+        }
+
+        $kegiatan = $pembina->kegiatan;
+
+        return view('pembina.presensicreate', compact('pembina', 'kegiatan'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'siswa_id' => 'required|exists:siswa,id',
             'tanggal' => 'required|date',
-            'jam_masuk' => 'required|date_format:H:i',
-            'status' => 'required|in:hadir,izin,sakit,alpa',
+            'waktu' => 'required',
         ]);
 
-        $pembina = Auth::user()->pembina;
+        $user = Auth::user();
+        $pembina = Pembina::where('user_id', $user->id)->first();
+
+        if (!$pembina) {
+            return redirect()->back()->with('error', 'Akses ditolak.');
+        }
 
         Presensi::create([
-            'siswa_id' => $request->siswa_id,
-            'kegiatan_id' => $pembina->kegiatan_id,
-            'pembina_id' => $pembina->id,
+            'kegiatan_id' => $pembina->kegiatan->id,
             'tanggal' => $request->tanggal,
-            'jam_masuk' => $request->jam_masuk,
-            'status' => $request->status,
+            'waktu' => $request->waktu,
+            'status' => 'active',
         ]);
 
-        return redirect()->route('apps.presensi.index')->with('success', 'Presensi berhasil ditambahkan');
+        return redirect()->back()->with('success', 'Presensi berhasil dibuat.');
     }
 
-    public function edit(Presensi $presensi)
+
+    public function siswaIndex()
     {
-        $pembina = Auth::user()->pembina;
-        if ($presensi->pembina_id !== $pembina->id) {
-            abort(403);
-        }
-        return view('apps.presensi.edit', compact('presensi'));
+        return view('siswa.presensisiswa');
     }
-
-    public function update(Request $request, Presensi $presensi)
+    public function siswaMasuk()
     {
-        $request->validate([
-            'jam_masuk' => 'required|date_format:H:i',
-            'status' => 'required|in:hadir,izin,sakit,alpa',
-        ]);
-
-        $pembina = Auth::user()->pembina;
-        if ($presensi->pembina_id !== $pembina->id) {
-            abort(403);
-        }
-
-        $presensi->update([
-            'jam_masuk' => $request->jam_masuk,
-            'status' => $request->status,
-        ]);
-
-        return redirect()->route('apps.presensi.index')->with('success', 'Presensi berhasil diperbarui');
+        return view('siswa.siswamasuk');
     }
-
-    public function destroy(Presensi $presensi)
+    public function storeSignIn(Request $request)
     {
-        $pembina = Auth::user()->pembina;
-        if ($presensi->pembina_id !== $pembina->id) {
-            abort(403);
+        // Memeriksa apakah ada gambar yang di-upload
+        if ($request->image) {
+            // Mengambil string 
+            $base64string = $request->image;
+            
+            // Menghapus prefix data 
+            $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64string));
+            
+            // Membuat nama file gambar dengan id unik
+            $image_name = uniqid() . '.jpeg';
+            
+            // Menyimpan gambar ke dalam penyimpanan lokal di folder 'public/absensi/masuk'
+            $upload = Storage::disk('local')->put("public/presensi/masuk/$image_name", $image);
+            
+            // Jika upload berhasil, redirect dengan pesan sukses
+            if ($upload) {
+                return redirect()->route('siswa.siswamasuk')->with('success', 'Upload Berhasil');
+            } else {
+                // Jika upload gagal, redirect dengan pesan gagal
+                return redirect()->route('siswa.siswamasuk')->with('danger', 'Upload Gagal');
+            }
+        } else {
+            // Jika gambar tidak ada, redirect dengan pesan gagal
+            return redirect()->route('siswa.siswamasuk')->with('danger', 'Gambar tidak ada');
         }
-
-        $presensi->delete();
-
-        return redirect()->route('apps.presensi.index')->with('success', 'Presensi berhasil dihapus');
     }
+
 }
 
 

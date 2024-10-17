@@ -3,9 +3,8 @@
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-12">
-        <h3 class="mb-4">Selamat Datang, {{ Auth::user()->name }}</h3>
+        <h3 class="mb-4">Selamat Datang {{ Auth::user()->name }}</h3>
     </div>
-
     <div class="col-lg-4">
         <div class="card mb-4 shadow-sm">
             <div class="card-body text-center">
@@ -20,27 +19,34 @@
     </div>
 
     <div class="col-lg-8">
-        <div class="card mb-4 shadow-sm">
-            <div class="card-body">
-                <h6 class="font-weight-bold">Presensi Disini</h6>               
-                @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-                
-                @if(session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
-
-                <form action="" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <label for="waktu_presensi">Waktu Presensi</label>
-                        <input type="datetime-local" class="form-control" name="waktu_presensi" id="waktu_presensi" value="{{ now()->format('Y-m-d\TH:i') }}" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Presensi Sekarang</button>
-                </form>
+        <div class="container">
+            <div class="row align-items-center ">
+                <!-- Presensi Masuk Card -->
+                <div class="col-md-6">
+                    <a href="{{'/siswamasuk'}}" class="text-decoration-none">
+                        <div class="card mb-4 shadow-sm text-center">
+                            <div class="card-body">
+                                <i class="fas fa-sign-in-alt fa-4x mb-3"></i>
+                                <h5 class="text-dark">Presensi Masuk</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+        
+                <!-- Jadwal Kegiatan Card -->
+                <div class="col-md-6">
+                    <a href="{{'/jadwalsiswa'}}" class="text-decoration-none">
+                        <div class="card mb-4 shadow-sm text-center">
+                            <div class="card-body">
+                                <i class="fas fa-calendar-alt fa-4x mb-3"></i>
+                                <h5 class="text-dark">Jadwal Kegiatan</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+    
 </div>
 @endsection

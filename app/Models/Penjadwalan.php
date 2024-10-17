@@ -18,5 +18,9 @@ class Penjadwalan extends Model
     {
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
     }
+    public function presensi()
+    {
+        return $this->hasMany(Presensi::class);
+    }
     
 }
