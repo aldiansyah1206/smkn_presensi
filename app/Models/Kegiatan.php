@@ -23,9 +23,13 @@ class Kegiatan extends Model
     public function siswa()
     {
         return $this->hasMany(Siswa::class, 'kegiatan_id');
+        return $this->hasMany(Siswa::class);
     }
     public function presensi()
     {
         return $this->hasMany(Presensi::class);
+        return $this->belongsToMany(Siswa::class, 'kegiatan_siswa', 'kegiatan_id', 'siswa_id');
+        return $this->hasMany(Siswa::class);
+        return $this->belongsTo(Siswa::class);
     }
 }

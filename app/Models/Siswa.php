@@ -15,7 +15,6 @@ class Siswa extends Model
         'user_id',
         'kelas_id',
         'jurusan_id',
-        'kegiatan_id',
         'jenis_kelamin',
         'no_hp',
         'alamat'
@@ -50,9 +49,8 @@ class Siswa extends Model
      */
     public function kegiatan()
     {
-        return $this->belongsTo(Kegiatan::class);
+        return $this->belongsTo(Kegiatan::class,'kegiatan_id');
     }
-
 
     public function presensi()
     {

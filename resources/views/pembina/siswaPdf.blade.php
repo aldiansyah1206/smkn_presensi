@@ -16,6 +16,8 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
+            text-align: left;
+
         }
         th {
             background-color: #f2f2f2;
@@ -46,12 +48,14 @@
                     <td>{{ $s->jurusan->name }}</td>
                     <td>{{ $s->jenis_kelamin }}</td> 
                     <td>{{ $s->kegiatan->name}}</td> 
+                    <td>{{ $s->kegiatan->name }}</td>
                     <td>{{ $s->no_hp }}</td>
                     <td>{{ $s->alamat }}</td> 
                 </tr>
             @empty
                 <tr>
                     <td colspan="10" class="text-center">Tidak ada siswa yang terdaftar.</td>
+                    <td colspan="9" class="text-center">Belum ada siswa yang mengikuti kegiatan ini.</td>
                 </tr>
             @endforelse
         </tbody>

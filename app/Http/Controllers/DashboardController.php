@@ -24,6 +24,14 @@ class DashboardController extends Controller
     {  
          // Ambil user yang login
         $user = auth()->user();
+    { 
+         // Ambil user yang login
+        $user = auth()->user();
+
+
+         // Ambil user yang login
+        $user = auth()->user();
+
 
         // Pastikan user yang login adalah Pembina
         if (!$user->pembina) {
@@ -44,6 +52,17 @@ class DashboardController extends Controller
             $countSiswaKegiatan = 0;
         }
 
+        $pembinaId = auth()->user()->id; 
+
+        // Ambil kegiatan yang dibina oleh pembina ini
+        $kegiatan = Kegiatan::where('pembina_id', $pembinaId)->first();
+    
+        if ($kegiatan) {
+            // Hitung jumlah siswa yang terkait dengan kegiatan ini
+            $countSiswaKegiatan = $kegiatan->siswa()->count();
+        } else {
+            $countSiswaKegiatan = 0;
+        }
     return view('dashboardpembina', compact('countSiswaKegiatan' ));
     }
 }

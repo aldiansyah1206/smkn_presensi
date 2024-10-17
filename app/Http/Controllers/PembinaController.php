@@ -24,6 +24,7 @@ class PembinaController extends Controller
         // Mendapatkan kegiatan yang dikelola oleh pembina
         $kegiatan = Kegiatan::where('pembina_id', $pembina->id)
             ->with(['siswa.user', 'siswa.kelas', 'siswa.jurusan', 'siswa.kegiatan'])
+            ->with(['siswa.user', 'siswa.kelas', 'siswa.jurusan'])
             ->get();
             if ($kegiatan->isEmpty()) {
                 return view('pembina.kegiatan', ['kegiatan' => collect(), 'siswa' => collect()]);
@@ -38,6 +39,7 @@ class PembinaController extends Controller
     {
         $pembina = Auth::user()->pembina;
         $kegiatan = $pembina->kegiatan()->whereHas('siswa')->get();
+        $kegiatan = $pembina->kegiatan;
         $siswa = Siswa::whereHas('kegiatan', function($query) use ($kegiatan) {
             $query->whereIn('kegiatan.id', $kegiatan->pluck('id')->toArray());
         })->with(['user', 'kegiatan', 'kelas', 'jurusan'])->get();
@@ -46,12 +48,15 @@ class PembinaController extends Controller
             'siswa' => $siswa,
             'kegiatan' => $kegiatan
         ]);
-
         return $pdf->download('daftar siswa.pdf');
     }
 
     public function presensi()
     {
-        
+
+        return $pdf->download('daftar siswa.pdf');
+    }
+    public function presensi()
+    {
     }
 }

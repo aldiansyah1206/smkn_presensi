@@ -163,6 +163,10 @@
                 <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
                 <a class="nav-link" href="{{'/jadwalsiswa'}}">
+                <!-- Nav Item penjadwalan  -->
+                <li class="nav-item">
+                <a class="nav-link" href="{{'/jadwalsiswa'}}">
+                <a class="nav-link" href="{{'jadwaluser'}}">
                         <i class="fas fa-calendar"></i>
                         <span>Jadwal Kegiatan</span></a>
                 </li>

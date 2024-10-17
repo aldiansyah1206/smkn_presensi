@@ -44,6 +44,7 @@
                                 <td>{{ $s->kelas->name }}</td>
                                 <td>{{ $s->jurusan->name }}</td>
                                 <td>{{ $s->kegiatan->name ?? 'N/A' }}</td>
+                                <td>{{ $s->kegiatan->pluck('name')->implode(', ') }}</td>
                                 <td>{{ $s->jenis_kelamin }}</td>
                                 <td>{{ $s->no_hp }}</td>
                                 <td>{{ $s->alamat }}</td>
