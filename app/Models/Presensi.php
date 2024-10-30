@@ -9,12 +9,20 @@ class Presensi extends Model
 {
     use HasFactory;
     protected $table = 'presensi';
-    protected $fillable = ['siswa_id', 'kegiatan_id','pembina_id', 'tanggal'];
-
+    protected $fillable = [
+        'pembina_id',  
+        'kegiatan_id', 
+        'tanggal',
+        'status'
+    ];
     /**
-     * Get the siswa that owns the Presensi.
+     *
      */
- public function siswa()
+    public function pembina()
+    {
+        return $this->belongsTo(Pembina::class);
+    }
+    public function siswa()
     {
         return $this->belongsTo(Siswa::class);
     }
@@ -24,9 +32,8 @@ class Presensi extends Model
         return $this->belongsTo(Kegiatan::class);
     }
 
-    public function pembina()
+    public function presensiSiswa()
     {
-        return $this->belongsTo(Pembina::class);
+        return $this->hasMany(PresensiSiswa::class);
     }
-
 }

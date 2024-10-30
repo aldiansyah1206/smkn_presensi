@@ -22,6 +22,8 @@
          <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
          <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+
         
     </head>
     <body id="page-top">
@@ -114,7 +116,7 @@
                 <!-- Nav Item - datapresensi  -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/pembina/kegiatan' }}">
-                        <i class="fas fa-clipboard-list"></i>
+                        <i class="fas fa-user-friends"></i>
                         <span>Data Siswa</span></a>
                 </li>
                 <!-- Nav Item - datapresensi  -->
@@ -125,7 +127,7 @@
                 </li>
                 <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'jadwal.user'}}">
+                    <a class="nav-link" href="{{'/jadwalpembina'}}">
                         <i class="fas fa-calendar"></i>
                         <span>Jadwal Kegiatan</span></a>
                 </li>
@@ -152,22 +154,22 @@
                  <div class="sidebar-heading">
                      Menu
                  </div>
-                <!-- Nav Item - presensi -->
+                <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'/presensi/now'}}">
-                        <i class="far fa-calendar-alt"></i>
+                <a class="nav-link" href="{{'/presensisiswa'}}">
+                        <i class="fas fa-calendar"></i>
                         <span>Presensi</span></a>
                 </li>
                 <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
-                <a class="nav-link" href="{{'jadwal.user'}}">
+                <a class="nav-link" href="{{'/jadwalsiswa'}}">
                         <i class="fas fa-calendar"></i>
                         <span>Jadwal Kegiatan</span></a>
                 </li>
 
                 <!-- Nav Item -riwayat presensi-->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'riwayatpresensisiswa'}}">
+                    <a class="nav-link" href="{{'riwayatps'}}">
                         <i class="far fa-calendar-alt"></i>
                         <span>Riwayat Presensi</span></a>
                 </li>
@@ -238,6 +240,14 @@
                             <div class="col-12">
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     {{ session('hapus') }}
+                                </div>
+                            </div>
+                        </div>
+                        @elseif(session()->has('danger'))
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ session('danger') }}
                                 </div>
                             </div>
                         </div>
@@ -312,5 +322,6 @@
                 });
             }, 2500); // Waktu dalam milidetik (misalnya 2500 = 2,5 detik)
         </script>
+        @stack('js')
     </body>
 </html>

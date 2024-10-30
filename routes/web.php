@@ -8,6 +8,7 @@ use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PresensiController;
+use App\Http\Controllers\PresensiSiswaController;
 use App\Http\Controllers\PembinaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 // login
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -85,19 +87,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:pembina'])->group(function () {
     Route::get('/dashboardpembina', [DashboardController::class, 'indexPembina'])->name('dashboardpembina');
     Route::get('/pembina/kegiatan', [PembinaController::class, 'index'])->name('pembina.kegiatan.index');
-    Route::get('presensi', [PresensiController::class, 'index'])->name('apps.presensi.index');
-    Route::get('presensi/create', [PresensiController::class, 'create'])->name('apps.presensi.create');
-    Route::post('presensi/store', [PresensiController::class, 'store'])->name('apps.presensi.store');
+    Route::get('/pembina/siswaPdf', [PembinaController::class, 'exportPDF'])->name('pembina.siswaPdf');
+    
+    Route::resource('presensi', PresensiController::class)->only(['index', 'create', 'store']);
+    Route::get('/presensicreate', [PresensiController::class, 'create'])->name('pembina.presensicreate');
+    Route::post('/presensistore', [PresensiController::class, 'store'])->name('pembina.presensistore');
+    Route::get('/jadwalpembina', [PenjadwalanController::class, 'indexjadwalpembina'])->name('apps.penjadwalan.jadwalpembina');
 });
 
 Route::middleware(['auth', 'role:siswa'])->group(function () {
-    Route::get('/dashboardsiswa', function () {
-        return view('dashboardsiswa');
-    })->name('dashboardsiswa'); 
-    Route::post('presensi/now', [PresensiController::class, 'presensiNow'])->name('apps.presensi.siswa');
+    Route::get('/dashboardsiswa', function () {return view('dashboardsiswa');})->name('dashboardsiswa'); 
+    
+    Route::get('/presensisiswa', [PresensiController::class, 'index'])->name('siswa.presensisiswa');
+    Route::get('/presensimasuk', [PresensiSiswaController::class, 'create'])->name('siswa.presensimasuk');
+    Route::post('/presensistore', [PresensiSiswaController::class, 'store'])->name('siswa.presensistore');
+    Route::get('/jadwalsiswa', [PenjadwalanController::class, 'indexjadwalsiswa'])->name('apps.penjadwalan.jadwalsiswa');
+    Route::get('/riwayatps', [PresensiController::class]);
 });
-Route::get('/jadwal', [PenjadwalanController::class, 'indexForUsers'])
-    ->name('jadwal.user')
-    ->middleware(['auth', 'checkRole:pembina,siswa']);
-
 require __DIR__.'/auth.php';

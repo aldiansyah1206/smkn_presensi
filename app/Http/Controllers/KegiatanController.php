@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Pembina;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
 
@@ -13,9 +13,11 @@ class KegiatanController extends Controller
     public function index()
     {
         $kegiatan = Kegiatan::orderBy ('name')->paginate(5);
+        $pembina = Pembina::all(); 
         return view('apps.kegiatan.index', [
                "title" => "Data kegiatan",
                "kegiatan" => $kegiatan,
+               "pembina" => $pembina,
         ]);
     }
 
@@ -25,10 +27,11 @@ class KegiatanController extends Controller
     public function create()
     {
         $kegiatan= Kegiatan::orderBy ('name')->paginate(5);
-
+        $pembina = Pembina::all();
         return view("apps.kegiatan.create", [
             "title" => "Tambah Kegiatan",
             "kegiatan" => $kegiatan,
+            "pembina" => $pembina,
         ]);
     }
 
@@ -39,13 +42,23 @@ class KegiatanController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:kegiatan,name',
+            'pembina_id' => 'required|exists:pembina,id',
         ]);
+
+           // Periksa apakah pembina sudah memiliki kegiatan
+        $existingKegiatan = Kegiatan::where('pembina_id', $request->pembina_id)->first();
+
+        if ($existingKegiatan) {
+            // Jika sudah ada kegiatan untuk pembina ini
+            return redirect()->back()->withErrors(['pembina' => 'Pembina sudah memiliki kegiatan lain.']);
+        }
 
         $kegiatan = new Kegiatan;
         $kegiatan->name = $request->name;
+        $kegiatan->pembina_id = $request->pembina_id;
         $kegiatan->save();
-    
-        return redirect()->route("apps.kegiatan.index")->with(['success' => 'Data berhasil ditambahkan']);
+
+        return redirect()->route("apps.kegiatan.index")->with('success', 'Data berhasil ditambahkan');
     }
 
     /**
@@ -63,10 +76,11 @@ class KegiatanController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Kegiatan $kegiatan)
-    {
+    {   $pembina = Pembina::all();
         return view("apps.kegiatan.edit", [
             "title" => "Edit Kegiatan ",
             "kegiatan" => $kegiatan,
+            "pembina" => $pembina,
         ]);
     }
 
@@ -77,10 +91,24 @@ class KegiatanController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:kegiatan,name,' . $kegiatan->id,
+            'pembina_id' => 'required|exists:pembina,id',
         ]);
+
+          // Periksa apakah pembina sudah memiliki kegiatan lain
+        if ($kegiatan->pembina_id != $request->pembina_id) {
+            $existingKegiatan = Kegiatan::where('pembina_id', $request->pembina_id)->first();
+
+            if ($existingKegiatan) {
+                // Jika sudah ada kegiatan untuk pembina ini, kembalikan pesan kesalahan
+                return redirect()->back()->withErrors(['pembina' => 'Pembina sudah memiliki kegiatan lain.']);
+            }
+        }
+        
         $kegiatan->name = $request->name;
+        $kegiatan->pembina_id = $request->pembina_id;
         $kegiatan->save();
-        return redirect()->route('apps.kegiatan.index')->with(['success' => 'Data berhasil diupdate']);
+
+        return redirect()->route('apps.kegiatan.index')->with('success', 'Data berhasil diupdate');
     }
 
     /**
@@ -88,7 +116,7 @@ class KegiatanController extends Controller
      */
     public function destroy($id)
     {
-        $kegiatan= Kegiatan::findOrFail($id); 
+        $kegiatan= Kegiatan::find($id); 
         $kegiatan->delete();
         return redirect()->route('apps.kegiatan.index')->with('success', 'Kegiatan berhasil dihapus.');
     }

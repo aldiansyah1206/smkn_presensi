@@ -11,14 +11,25 @@ class Kegiatan extends Model
 
     protected $table = 'kegiatan';
     protected $guarded = ['id'];
-    protected $fillable = ["name"];
-
+    protected $fillable = ['name', 'pembina_id'];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'pembina_id');
+    }
     public function pembina()
     {
-        return $this->hasMany(Pembina::class, 'kegiatan_id');
+        return $this->belongsTo(Pembina::class);
     }
     public function siswa()
     {
-        return $this->belongsTo(Siswa::class, 'siswa_id');
+        return $this->hasMany(Siswa::class);
+    }
+    public function presensi()
+    {
+        return $this->hasMany(Presensi::class);
+    }
+    public function canAddKegiatan()
+    {
+        return $this->kegiatans()->count() < 1;
     }
 }

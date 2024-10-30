@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('presensi', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('siswa_id');
-            $table->unsignedBigInteger('kegiatan_id');
             $table->unsignedBigInteger('pembina_id'); 
+            $table->unsignedBigInteger('kegiatan_id');
             $table->date('tanggal');
-            $table->time('jam_masuk')->nullable();
-            $table->string('status')->nullable();
-            $table->timestamps();
-            $table->foreign('siswa_id')->references('id')->on('siswa')->onDelete('cascade');
-            $table->foreign('kegiatan_id')->references('id')->on('kegiatan')->onDelete('cascade');
+            $table->enum('status', ['Aktif', 'Selesai'])->default('Aktif');
             $table->foreign('pembina_id')->references('id')->on('pembina')->onDelete('cascade');
+            $table->foreign('kegiatan_id')->references('id')->on('kegiatan')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
