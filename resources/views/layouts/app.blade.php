@@ -154,9 +154,9 @@
                  <div class="sidebar-heading">
                      Menu
                  </div>
-                <!-- Nav Item penjadwalan  -->
+                <!-- Nav Item presensi  -->
                 <li class="nav-item">
-                <a class="nav-link" href="{{'/presensisiswa'}}">
+                    <a class="nav-link" href="{{'/presensisiswa'}}">
                         <i class="fas fa-calendar"></i>
                         <span>Presensi</span></a>
                 </li>

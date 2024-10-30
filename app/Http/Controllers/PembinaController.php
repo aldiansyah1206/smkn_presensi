@@ -50,8 +50,4 @@ class PembinaController extends Controller
         return $pdf->download('daftar siswa.pdf');
     }
 
-    public function presensi()
-    {
-        
-    }
 }

@@ -112,6 +112,9 @@ class AdminUserController extends Controller
             'alamat' => $request->alamat,
         ]);
 
+        $kegiatanIds = is_array($request->kegiatan_id) ? $request->kegiatan_id : [$request->kegiatan_id];
+        $siswa->kegiatan()->sync($kegiatanIds);
+        
         $user->assignRole('siswa');
 
         return redirect()->route('apps.users.indexSiswa')->with('success', 'Siswa berhasil ditambahkan.');
@@ -127,7 +130,6 @@ class AdminUserController extends Controller
             'no_hp' => 'nullable|string|max:15',
             'alamat' => 'required|string|max:255',
         ]);
-       
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
