@@ -17,39 +17,61 @@ class PresensiSiswaController extends Controller
 
   public function store(Request $request, Presensi $presensi)
   {
-        $request->validate([
-            'foto_selfie' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'status' => 'required|in:masuk,alpa',
-        ]);
+      // Validasi input
+      $request->validate([
+          'foto_selfie' => 'required', // Data Base64
+          'status' => 'required|in:masuk,alpa',
+      ]);
 
-        // Memeriksa apakah ada gambar yang di-upload
-        if ($request->hasFile('foto_selfie')) {
-            $image = $request->file('foto_selfie');
-            $image_name = uniqid() . '.' . $image->getClientOriginalExtension();
-            $upload = Storage::disk('public')->put("presensi/masuk/$image_name", file_get_contents($image));
+      $siswa = Auth::user()->siswa; // Ambil data siswa yang login
+      $kegiatan = $siswa->kegiatan; // Ambil kegiatan siswa
 
-            if ($upload) {
-                $siswa = Auth::user()->siswa;
-                $kegiatan = $siswa->kegiatan;
+      // Validasi apakah siswa terdaftar di kegiatan
+      if (!$kegiatan || $kegiatan->id !== $presensi->kegiatan_id) {
+          return redirect()->route('siswa.presensimasuk')
+              ->with('danger', 'Anda tidak terdaftar pada kegiatan ini.');
+      }
 
-                if ($kegiatan && $kegiatan->id === $presensi->kegiatan_id) {
-                    PresensiSiswa::create([
-                        'presensi_id' => $presensi->id,
-                        'siswa_id' => $siswa->id,
-                        'tanggal' => now(),
-                        'foto_selfie' => $image_name,
-                        'status' => $request->status,
-                    ]);
+      // Decode data Base64 menjadi gambar
+      $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->foto_selfie), true);
 
-                    return redirect()->route('siswa.presensimasuk')->with('success', 'Presensi berhasil diisi.');
-                } else {
-                    return redirect()->route('siswa.presensimasuk')->with('danger', 'Anda tidak terdaftar pada kegiatan ini.');
-                }
-            } else {
-                return redirect()->route('siswa.presensimasuk')->with('danger', 'Gagal mengunggah gambar.');
-            }
-        } else {
-            return redirect()->route('siswa.presensimasuk')->with('danger', 'Gambar tidak ditemukan.');
-        }
-    }
+      if (!$imageData) {
+          return redirect()->route('siswa.presensimasuk')
+              ->with('danger', 'Data foto tidak valid.');
+      }
+
+      // Cek presensi ganda
+      $existingPresensi = PresensiSiswa::where('presensi_id', $presensi->id)
+          ->where('siswa_id', $siswa->id)
+          ->whereDate('tanggal', now()->toDateString())
+          ->first();
+
+      if ($existingPresensi) {
+          return redirect()->route('siswa.presensimasuk')
+              ->with('warning', 'Anda sudah melakukan presensi hari ini.');
+      }
+
+      // Simpan gambar ke storage
+      $imageName = uniqid() . '.png';
+      $imagePath = "presensi/masuk/$imageName";
+      $upload = Storage::disk('public')->put($imagePath, $imageData);
+
+      if (!$upload) {
+          return redirect()->route('siswa.presensimasuk')
+              ->with('danger', 'Gagal menyimpan foto. Silakan coba lagi.');
+      }
+
+      // Simpan data presensi di database
+      PresensiSiswa::create([
+          'presensi_id' => $presensi->id,
+          'siswa_id' => $siswa->id,
+          'tanggal' => now(),
+          'foto_selfie' => $imagePath, // Hanya menyimpan path gambar
+          'status' => $request->status,
+      ]);
+
+      return redirect()->route('siswa.presensimasuk')
+          ->with('success', 'Presensi berhasil diisi.');
+  }
+  
 }
