@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->intended(RouteServiceProvider::SISWA_HOME);
             } else {
                 Auth::logout();
-                return redirect()->route('/login')->withErrors([
+                return redirect()->route('login')->withErrors([
                     'email' => 'Role not found. Please contact administrator.',
                 ]);
             }
@@ -53,6 +53,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('login');
     }
 }
