@@ -15,7 +15,7 @@
                             <tr>
                                 <th scope="col" class="text-center">No</th>
                                 <th scope="col">Nama Jurusan</th>
-                                <th scope="col">Aksi</th>
+                                <th scope="col" style="width: 15%;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -27,16 +27,14 @@
                                 <td>{{ $no }}</td>
                                 <td>{{ $j->name }}</td>
                                 <td>
-                                    <div class="p-2">
-                                        <div class="row">
+                                    <div class="action-buttons d-flex align-items-center">
                                             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editJurusanModal{{ $j->id }}">
                                                 Edit
                                             </button>
                                             <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#hapusJurusanModal{{ $j->id }}">
                                                 Hapus
                                             </button>
-                                        </div>
-                                    </div>
+                                    </div> 
                                 </td>
                             </tr>
                             <?php $no++; ?>

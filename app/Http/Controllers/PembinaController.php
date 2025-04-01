@@ -7,7 +7,8 @@ use App\Models\Kegiatan;
 use App\Models\Pembina;
 use App\Models\Siswa;
 use Illuminate\Support\Facades\Auth;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
+ 
 
 class PembinaController extends Controller
 {
@@ -34,6 +35,7 @@ class PembinaController extends Controller
     
             return view('pembina.kegiatan', compact('kegiatan', 'siswa'));
     }
+    
     public function exportPDF()
     {
         $pembina = Auth::user()->pembina;

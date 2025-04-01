@@ -16,7 +16,6 @@
                                 <th scope="col" class="text-center">No</th>
                                 <th scope="col">Foto Kehadiran</th>
                                 <th scope="col">Waktu Kehadiran</th>
-                                <th scope="col">Status</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>

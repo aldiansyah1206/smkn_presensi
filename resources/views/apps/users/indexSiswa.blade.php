@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+ 
 @section('content')
 <div class="row">
     <div class="col-lg-12">
@@ -78,7 +78,7 @@
                                                     <input type="email" class="form-control" id="email" name="email" value="{{ $s->user->email }}" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="password">Password (Masukkan password sebelumnya atau kosongkan)</label>
+                                                    <label for="password">Password (Masukkan password sebelumnya) </label>
                                                     <input type="password" class="form-control" id="password" name="password">
                                                 </div>
                                                 <div class="form-group">

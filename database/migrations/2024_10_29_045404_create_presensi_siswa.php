@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('presensi_id'); 
             $table->unsignedBigInteger('siswa_id'); 
-            $table->string('foto_selfie');
-            $table->enum('status', ['Masuk', 'Tidak Masuk'])->default('Tidak Masuk'); 
+            $table->string('foto_selfie'); 
+            $table->date('tanggal');  
+            $table->time('waktu')->nullable();  
             $table->timestamps();
             $table->foreign('presensi_id')->references('id')->on('presensi')->onDelete('cascade');
             $table->foreign('siswa_id')->references('id')->on('siswa')->onDelete('cascade');

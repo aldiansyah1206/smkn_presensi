@@ -11,10 +11,8 @@
                 </div>
 
                 <div class="card-body">
-                    {{-- Webcam --}}
-                    <div class="m-auto" id="my_camera" style="max-width: 100%; height: auto;"></div>
+                    <div class="m-auto" id="my_camera"></div>
 
-                    {{-- Hasil Foto --}}
                     <center>
                         <div id="result" class="my-3"></div>
                     </center>
@@ -22,13 +20,12 @@
                     <div class="d-grid my-3">
                         <button class="btn btn-success w-100" onClick="take_snapshot()">Ambil Foto</button>
                     </div>
-
-                    {{-- Form --}}
                     <form action="{{ route('siswa.presensistore') }}" method="post">
                         @csrf
-                        <input type="hidden" class="image-tag" name="image">
+                        <input type="hidden" name="presensi_id" value="{{ $presensi->id ?? '' }}">
+                        <input type="hidden" name="foto_selfie" id="foto_selfie_base64" required>
                         <div class="d-grid">
-                            <button class="btn btn-primary w-100">Masuk</button>
+                            <button class="btn btn-primary w-100" type="submit">Masuk</button>
                         </div>
                     </form>
                 </div>
@@ -39,9 +36,7 @@
 @endsection
 
 @push('js')
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
-
 <script>
     Webcam.set({
         width: 280,
@@ -52,43 +47,18 @@
     Webcam.attach('#my_camera');
 
     function take_snapshot() {
-        Webcam.snap(function(data_url){
-            $(".image-tag").val(data_url);
-            document.getElementById('result').innerHTML = '<img class="img-fluid rounded" src="'+data_url+'" alt="Gambar" style="border: 2px solid #007bff;">';
+        Webcam.snap(function(data_url) {
+            $("#result").html('<img class="img-fluid rounded" src="' + data_url + '" alt="Gambar" style="border: 2px solid #007bff;">');
+            $("#foto_selfie_base64").val(data_url);
         });
     }
 </script>
 
 <script>
-    var myVar = setInterval(function() {
-        myTimer();
+    setInterval(function() {
+        let d = new Date();
+        let options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+        $("#clock").html(d.toLocaleTimeString([], options));
     }, 1000);
-    function myTimer() {
-    var d = new Date();
-    var options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true }; 
-    document.getElementById("clock").innerHTML = d.toLocaleTimeString([], options);
-}
-
 </script>
 @endpush
-
-<style>
-
-    .card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
-    }
-
-
-    #my_camera {
-        width: 100%;  
-        max-height: 240px; 
-        margin-bottom: 1rem; 
-    }
-
-    #result img {
-        max-width: 100%; 
-        height: auto; 
-    }
-</style>

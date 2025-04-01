@@ -16,7 +16,7 @@
                                 <th scope="col" class="text-center">No</th>
                                 <th scope="col">Nama Kegiatan</th>
                                 <th scope="col">Pembina</th>
-                                <th scope="col">Aksi</th>
+                                <th scope="col" style="width: 15%;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,15 +29,13 @@
                                 <td>{{ $keg->name }}</td>
                                 <td>{{ $keg->pembina->user->name ?? 'Pembina tidak tersedia' }}</td>
                                 <td>
-                                    <div class="p-2">
-                                        <div class="row">
-                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editKegiatanModal{{ $keg->id }}">
-                                                Edit
-                                            </button>
-                                            <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#hapusKegiatanModal{{ $keg->id }}">
-                                                Hapus
-                                            </button>
-                                        </div>
+                                    <div class="action-buttons d-flex align-items-center">
+                                        <button type="button" class="btn btn-warning btn-sm mr-1" data-toggle="modal" data-target="#editKegiatanModal{{ $keg->id }}">
+                                            Edit
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hapusKegiatanModal{{ $keg->id }}">
+                                            Hapus
+                                        </button>
                                     </div>
                                 </td>
                             </tr>

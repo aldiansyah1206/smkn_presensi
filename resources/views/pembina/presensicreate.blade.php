@@ -6,17 +6,8 @@
             <h3 class="card-title">Buat Presensi Baru</h3>
         </div>
         <div class="card-body">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="{{ route('pembina.presensistore') }}" method="POST">
+ 
+            <form action="{{ route('presensi.store') }}" method="POST">
                 @csrf
                 
                 <div class="mb-3">
@@ -36,16 +27,13 @@
 
                 <div class="mb-3">
                     <label for="tanggal" class="form-label">Tanggal</label>
-                    <input type="date" 
-                           class="form-control @error('tanggal') is-invalid @enderror" 
-                           id="tanggal" 
-                           name="tanggal" 
-                           value="{{ old('tanggal', date('Y-m-d')) }}"
-                           required>
+                    <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" required min="{{ date('Y-m-d') }}">
                     @error('tanggal')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+                
+                
 
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('presensi.index') }}" class="btn btn-secondary">Kembali</a>

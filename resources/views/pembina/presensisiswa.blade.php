@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
-
-
-
+@section('content') 
 <div class="container">
     <h1>Daftar Presensi</h1>
 
