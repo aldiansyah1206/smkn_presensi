@@ -15,6 +15,7 @@ class PresensiSiswaController extends Controller
     {  
         $siswa = Auth::user()->siswa; // Mendapatkan data siswa yang sedang login   
 
+ 
         // Ambil presensi berdasarkan kegiatan siswa untuk hari ini
         $presensi = Presensi::where('kegiatan_id', $siswa->kegiatan_id)
             ->whereDate('tanggal', now()->toDateString())
@@ -117,4 +118,8 @@ class PresensiSiswaController extends Controller
 
         return $folderPath . $fileName;  
     }
+ 
 }
+ 
+  
+ 
