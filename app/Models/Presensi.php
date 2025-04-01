@@ -13,7 +13,6 @@ class Presensi extends Model
         'pembina_id',  
         'kegiatan_id', 
         'tanggal',
-        'status'
     ];
     /**
      *
@@ -24,12 +23,14 @@ class Presensi extends Model
     }
     public function siswa()
     {
-        return $this->belongsTo(Siswa::class);
+        return $this->belongsToMany(Siswa::class, 'presensi_siswa')
+        ->withPivot('foto_selfie', 'tanggal', 'waktu')
+        ->withTimestamps();
     }
 
     public function kegiatan()
     {
-        return $this->belongsTo(Kegiatan::class);
+        return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
     }
 
     public function presensiSiswa()

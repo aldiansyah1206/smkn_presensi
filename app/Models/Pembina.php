@@ -26,6 +26,6 @@ class Pembina extends Model
     // Mendefinisikan relasi dengan model Kegiatan
     public function kegiatan()
     {
-        return $this->hasOne(Kegiatan::class);
+        return $this->hasOne(Kegiatan::class, 'pembina_id');
     }
 }

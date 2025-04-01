@@ -16,24 +16,72 @@
     </div>
 </div>
 
-{{-- Custom styling untuk memperindah kalender --}}
+{{-- Custom styling untuk kalender --}}
 <style>
     #calendar {
         max-width: 100%;
         margin: 20px auto;
+        font-size: 16px;  
     }
+
     .fc-header-toolbar {
         margin-bottom: 20px;
+        flex-wrap: wrap;  
     }
+
     .fc-daygrid-event {
         background-color: #007bff;
         border: none;
         color: white;
         padding: 5px;
         border-radius: 4px;
+        font-size: 0.9em;  
+        white-space: normal;  
+        line-height: 1.2;  
     }
+
     .fc-daygrid-event:hover {
         background-color: #0056b3;
+    }
+
+     
+    @media (max-width: 768px) {
+        #calendar {
+            font-size: 14px;  
+        }
+
+        .fc-daygrid-event {
+            padding: 3px;  
+            font-size: 0.8em;  
+        }
+
+        .fc-header-toolbar {
+            flex-direction: column;  
+            align-items: center;
+        }
+
+        .fc-header-toolbar .fc-button-group {
+            margin-bottom: 10px;  
+        }
+
+        .fc-daygrid-day {
+            min-height: 80px;  
+        }
+    }
+
+    @media (max-width: 576px) {
+        #calendar {
+            font-size: 12px;  
+        }
+
+        .fc-daygrid-event {
+            padding: 2px;
+            font-size: 0.7em;
+        }
+
+        .fc-daygrid-day {
+            min-height: 60px;
+        }
     }
 </style>
 
@@ -45,8 +93,15 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             themeSystem: 'bootstrap',
             initialView: 'dayGridMonth',
+            locale: 'id',
+            buttonText: {
+                today: 'Hari Ini',
+                month: 'Bulan',
+                week: 'Minggu',
+                day: 'Hari'
+            },
             headerToolbar: {
-                left: 'prev,next today',
+                left: 'prev,next',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
@@ -54,9 +109,23 @@
             editable: false,
             droppable: false,
             eventDisplay: 'block',
+            height: 'auto',  
+            contentHeight: 'auto',  
+            aspectRatio: 1.5,  
+            eventTimeFormat: {  
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            },
+            dayMaxEvents: true,  
         });
 
         calendar.render();
+
+        
+        window.addEventListener('resize', function() {
+            calendar.updateSize();  
+        });
     });
 </script>
 @endsection

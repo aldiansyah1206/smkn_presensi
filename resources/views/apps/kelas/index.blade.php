@@ -15,7 +15,7 @@
                             <tr>
                                 <th scope="col" class="text-center">No</th>
                                 <th scope="col">Nama Kelas</th>
-                                <th scope="col">Aksi</th>
+                                <th scope="col" style="width: 15%;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -26,17 +26,15 @@
                             <tr>
                                 <td>{{ $no }}</td>
                                 <td>{{ $k->name }}</td>
-                                <td>
-                                    <div class="p-2">
-                                        <div class="row">
+                                <td> 
+                                        <div class="action-buttons d-flex align-items-center">
                                             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editKelasModal{{ $k->id }}">
                                                 Edit
                                             </button>
                                             <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#hapusKelasModal{{ $k->id }}">
                                                 Hapus
                                             </button>
-                                        </div>
-                                    </div>
+                                        </div> 
                                 </td>
                             </tr>
                             <?php $no++; ?>

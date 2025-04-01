@@ -18,12 +18,13 @@
 
         <!-- Custom styles for this template-->
         <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-         <!--calendar-->
-         <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
-         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
-         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
-
+        
+        <!--calendar-->
+        <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+        <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
         
     </head>
     <body id="page-top">
@@ -131,11 +132,17 @@
                         <i class="fas fa-calendar"></i>
                         <span>Jadwal Kegiatan</span></a>
                 </li>
-                <!-- Nav Item - datapresensi  -->
+                <!-- Nav Item - riwayatpresensi  -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'/riwayatpresensi'}}">
+                    <a class="nav-link" href="{{'/presensi/history'}}">
                         <i class="fas fa-history"></i>
                         <span>Riwayat Presensi</span></a>
+                </li>
+                <!-- Nav Item - rekappresensi  -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{'/presensi/rekap'}}">
+                        <i class="fas fa-file-pdf"></i> 
+                        <span>Rekap Presensi</span></a>
                 </li>
                 @endif
                 @if (Auth::user()->hasRole('siswa'))
@@ -153,13 +160,7 @@
                  <!-- Heading -->
                  <div class="sidebar-heading">
                      Menu
-                 </div>
-                <!-- Nav Item presensi  -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{{'/presensisiswa'}}">
-                        <i class="fas fa-calendar"></i>
-                        <span>Presensi</span></a>
-                </li>
+                 </div> 
                 <!-- Nav Item penjadwalan  -->
                 <li class="nav-item">
                 <a class="nav-link" href="{{'/jadwalsiswa'}}">
@@ -169,7 +170,7 @@
 
                 <!-- Nav Item -riwayat presensi-->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'riwayatps'}}">
+                    <a class="nav-link" href="{{'/siswa/presensi/history'}}">
                         <i class="far fa-calendar-alt"></i>
                         <span>Riwayat Presensi</span></a>
                 </li>

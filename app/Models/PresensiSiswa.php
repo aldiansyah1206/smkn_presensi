@@ -11,19 +11,20 @@ class PresensiSiswa extends Model
     protected $table = 'presensi_siswa';
     protected $fillable = [
         'presensi_id',  
-        'siswa_id',  
-        'foto_selfie', 
-        'status'
+        'siswa_id', 
+        'foto_selfie',
+        'tanggal',
+        'waktu'
     ];
 
       // Relasi ke presensi
       public function presensi()
       {
-          return $this->belongsTo(Presensi::class);
+          return $this->belongsTo(Presensi::class, 'presensi_id');
       }
       // Relasi ke siswa
       public function siswa()
       {
-          return $this->belongsTo(User::class, 'siswa_id');
+        return $this->belongsTo(Siswa::class, 'siswa_id');
       }
 }

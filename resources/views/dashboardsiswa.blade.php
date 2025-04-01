@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+            <!-- Pesan Sukses atau Error -->
+ @if (session('success'))
+    <div class="alert alert-success" role="alert">
+        {{ session('success') }}
+    </div>
+ @endif
+ 
+ @if (session('info'))
+    <div class="alert alert-warning" role="alert">
+     {{ session('info') }}
+    </div>
+ @endif
 <div class="row justify-content-center">
     <div class="col-lg-12">
         <h3 class="mb-4">Selamat Datang {{ Auth::user()->name }}</h3>
@@ -23,7 +35,7 @@
             <div class="row align-items-center ">
                 <!-- Presensi Masuk Card -->
                 <div class="col-md-6">
-                    <a href="{{'/presensimasuk'}}" class="text-decoration-none">
+                    <a href="{{ route('siswa.presensi') }}" class="text-decoration-none">
                         <div class="card mb-4 shadow-sm text-center">
                             <div class="card-body">
                                 <i class="fas fa-sign-in-alt fa-4x mb-3"></i>
@@ -35,7 +47,7 @@
         
                 <!-- Jadwal Kegiatan Card -->
                 <div class="col-md-6">
-                    <a href="{{'/jadwalsiswa'}}" class="text-decoration-none">
+                    <a href="{{ route('apps.penjadwalan.jadwalsiswa') }}" class="text-decoration-none">
                         <div class="card mb-4 shadow-sm text-center">
                             <div class="card-body">
                                 <i class="fas fa-calendar-alt fa-4x mb-3"></i>

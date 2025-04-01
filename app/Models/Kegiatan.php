@@ -30,6 +30,6 @@ class Kegiatan extends Model
     }
     public function canAddKegiatan()
     {
-        return $this->kegiatans()->count() < 1;
+        return $this->kegiatan()->count() < 1;
     }
 }

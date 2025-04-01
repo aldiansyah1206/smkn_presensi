@@ -29,7 +29,7 @@ class AdminUserController extends Controller
             });
         }
 
-        $pembina = $query->paginate(5);
+        $pembina = $query->paginate(10);
         $kegiatan = Kegiatan::all();
         return view('apps.users.indexPembina', compact('pembina', 'kegiatan'));
     }
@@ -55,7 +55,7 @@ class AdminUserController extends Controller
             });
         }
 
-        $siswa = $query->paginate(5);
+        $siswa = $query->paginate(10);
         $jurusan = Jurusan::all();
         $kelas = Kelas::all();
         $kegiatan = Kegiatan::all();
@@ -112,9 +112,6 @@ class AdminUserController extends Controller
             'alamat' => $request->alamat,
         ]);
 
-        $kegiatanIds = is_array($request->kegiatan_id) ? $request->kegiatan_id : [$request->kegiatan_id];
-        $siswa->kegiatan()->sync($kegiatanIds);
-        
         $user->assignRole('siswa');
 
         return redirect()->route('apps.users.indexSiswa')->with('success', 'Siswa berhasil ditambahkan.');
@@ -203,7 +200,7 @@ class AdminUserController extends Controller
     {
         $pembina = Pembina::findOrFail($id);
         $user = $pembina->user;
-
+    
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
@@ -211,29 +208,43 @@ class AdminUserController extends Controller
             'jenis_kelamin' => 'required|string|max:10',
             'no_hp' => 'nullable|string|max:15',
             'alamat' => 'required|string|max:255',
+            'kegiatan_id' => 'nullable|exists:kegiatan,id', // Validasi kegiatan_id
         ]);
-            // Cek apakah pembina sudah mengelola kegiatan lain (kecuali kegiatan yang sama)
-            $pembinaExists = Pembina::where('kegiatan_id', $request->kegiatan_id)
-                ->where('id', '!=', $pembina->id)
+    
+        // Cek apakah kegiatan sudah dikelola oleh pembina lain
+        if ($request->kegiatan_id) {
+            $kegiatanExists = Kegiatan::where('id', $request->kegiatan_id)
+                ->where('pembina_id', '!=', $pembina->id)
+                ->whereNotNull('pembina_id')
                 ->exists();
-
-            if ($pembinaExists) {
-                return redirect()->back()->withErrors('Pembina ini sudah mengelola kegiatan lain.');
+    
+            if ($kegiatanExists) {
+                return redirect()->back()->withErrors('Kegiatan ini sudah dikelola oleh pembina lain.');
             }
+        }
+    
         // Update data pengguna
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password ? Hash::make($request->password) : $user->password,
         ]);
-
+    
         // Update data pembina
         $pembina->update([
             'jenis_kelamin' => $request->jenis_kelamin,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
         ]);
-
+    
+        // Update kegiatan jika ada kegiatan_id yang dikirim
+        if ($request->kegiatan_id) {
+            // Hapus pembina_id dari kegiatan lain yang mungkin terkait dengan pembina ini
+            Kegiatan::where('pembina_id', $pembina->id)->update(['pembina_id' => null]);
+            // Tetapkan pembina_id ke kegiatan yang dipilih
+            Kegiatan::where('id', $request->kegiatan_id)->update(['pembina_id' => $pembina->id]);
+        }
+    
         return redirect()->route('apps.users.indexPembina')->with('success', 'Pembina berhasil diupdate.');
     }
 

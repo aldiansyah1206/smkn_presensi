@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('pembina_id'); 
             $table->unsignedBigInteger('kegiatan_id');
             $table->date('tanggal');
-            $table->enum('status', ['Aktif', 'Selesai'])->default('Aktif');
             $table->foreign('pembina_id')->references('id')->on('pembina')->onDelete('cascade');
             $table->foreign('kegiatan_id')->references('id')->on('kegiatan')->onDelete('cascade');
             $table->timestamps();
