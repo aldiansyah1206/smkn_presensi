@@ -13,9 +13,7 @@ class PresensiSiswaController extends Controller
 {
     public function index()
     {  
-        $siswa = Auth::user()->siswa; // Mendapatkan data siswa yang sedang login   
-
-        // Ambil presensi berdasarkan kegiatan siswa untuk hari ini
+        $siswa = Auth::user()->siswa;  
         $presensi = Presensi::where('kegiatan_id', $siswa->kegiatan_id)
             ->whereDate('tanggal', now()->toDateString())
             ->orderBy('tanggal', 'desc')
@@ -117,4 +115,8 @@ class PresensiSiswaController extends Controller
 
         return $folderPath . $fileName;  
     }
+ 
 }
+ 
+ 
+ 
